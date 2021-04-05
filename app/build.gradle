@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+android {
+    compileSdkVersion rootProject.ext.android.COMPILESDKVERSION
+    buildToolsVersion rootProject.ext.android.BUILDTOOLSVERSION
+
+    defaultConfig {
+        applicationId "com.sychen.anew"
+        minSdkVersion rootProject.ext.android.MINSDKVERSION
+        targetSdkVersion rootProject.ext.android.TARGETSDKVERSION
+        versionCode rootProject.ext.android.VERSIONCODE
+        versionName rootProject.ext.android.VERSIONNAME
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation rootProject.ext.dependencies.publicimplementation
+    implementation project(rootProject.ext.dependencies.other)
+    if (!rootProject.ext.android.IS_APPLICATION){
+        implementation project(path: ':home')
+    }
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    //bottom-navigation
+    implementation 'com.etebarian:meow-bottom-navigation:1.3.1'
+}
