@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav"
+    app:startDestination="@id/greetFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.sychen.login.ui.login.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/login_fragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.sychen.login.ui.user.UserFragment"
+        android:label="user_fragment"
+        tools:layout="@layout/user_fragment" />
+    <fragment
+        android:id="@+id/greetFragment"
+        android:name="com.sychen.login.ui.welcome.GreetFragment"
+        android:label="greet_fragment"
+        tools:layout="@layout/greet_fragment" >
+        <action
+            android:id="@+id/action_greetFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+</navigation>

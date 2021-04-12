@@ -17,6 +17,10 @@ class HomeViewModel : ViewModel() {
     private var _newsInfo = MutableLiveData<List<NewsC.Data>>()
     val newsInfo: LiveData<List<NewsC.Data>> = _newsInfo
 
+    init {
+        getAllNews()
+    }
+
     fun getAllNews() {
         HomeRetrofitUtil.api.getAllNewsC()
             .enqueue(object : Callback<NewsC> {
@@ -36,8 +40,8 @@ class HomeViewModel : ViewModel() {
             })
     }
 
-    fun uploadLocation(lon:String,lat:String,uid:String,time:String){
-        HomeRetrofitUtil.api.uploadLocation(lon,lat,uid,time)
+    fun uploadLocation(lon: String, lat: String, uid: String, time: String) {
+        HomeRetrofitUtil.api.uploadLocation(lon, lat, uid, time)
             .enqueue(object : Callback<Location> {
                 override fun onResponse(
                     call: Call<Location>,

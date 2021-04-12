@@ -1,11 +1,10 @@
-package com.sychen.anew
+package com.sychen.anew.activity
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sychen.anew.R
 import com.sychen.anew.ui.dashboard.DashboardFragment
 import com.sychen.anew.ui.home.HomeFragment
 import com.sychen.anew.ui.notifications.NotificationsFragment

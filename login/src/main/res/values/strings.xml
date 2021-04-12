@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="please_insert_account">请输入账号</string>
+    <string name="please_insert_psd">请输入密码</string>
+</resources>

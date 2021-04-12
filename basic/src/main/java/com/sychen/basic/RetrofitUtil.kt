@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
 const val BASE_URL="http://sychen.cn1.utools.club/"
-object NewRetrofit {
+object RetrofitUtil {
     private val retrofit: Retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(GsonConverterFactory.create())
