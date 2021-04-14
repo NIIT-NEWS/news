@@ -1,11 +1,9 @@
-package com.sychen.login.database
+package com.sychen.login.database.database
 
 import android.content.Context
 import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.sychen.login.database.dao.UserDao
 import com.sychen.login.database.model.User
-import okhttp3.internal.Internal.instance
 
 
 @Database(entities = [User::class], version = 1,exportSchema = false)

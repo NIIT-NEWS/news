@@ -1,6 +1,7 @@
 package com.sychen.login.network
 
 import com.sychen.login.network.model.Login
+import com.sychen.login.network.model.UserInfo
 import com.sychen.login.network.model.VerifyToken
 import retrofit2.Call
 import retrofit2.http.*
@@ -12,9 +13,11 @@ interface API {
         @Query("password") password: String,
     ): Call<Login>
 
-    @Headers("Accept-Language")
     @GET("/user/verify-token")
     fun verifyToken(
-         token: String
+        @Header("token") token: String
     ): Call<VerifyToken>
+
+    @GET("/user/queryuser")
+    fun getUserById(@Query("id") id: String): Call<UserInfo>
 }

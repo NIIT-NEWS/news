@@ -36,6 +36,7 @@ dependencies {
     implementation project(rootProject.ext.dependencies.other)
     if (!rootProject.ext.android.IS_APPLICATION){
         implementation project(path: ':home')
+        implementation project(path: ':login')
     }
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

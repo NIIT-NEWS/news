@@ -1,4 +1,4 @@
-package com.sychen.login.database
+package com.sychen.login.database.repository
 
 import androidx.lifecycle.LiveData
 import com.sychen.login.database.dao.UserDao

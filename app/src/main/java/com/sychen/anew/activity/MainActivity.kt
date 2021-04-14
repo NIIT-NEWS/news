@@ -7,7 +7,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.sychen.anew.R
 import com.sychen.anew.ui.dashboard.DashboardFragment
 import com.sychen.anew.ui.home.HomeFragment
-import com.sychen.anew.ui.notifications.NotificationsFragment
+import com.sychen.anew.ui.user.UserFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                 override fun createFragment(position: Int) = when (position) {
                     0 -> HomeFragment()
                     1 -> DashboardFragment()
-                    else -> NotificationsFragment()
+                    else -> UserFragment()
                 }
             }
             setCurrentItem(0, false) //false 代表平滑滚动

@@ -13,10 +13,11 @@ import retrofit2.Response
 class LoginViewModel : ViewModel() {
     private var _flag = MutableLiveData<Boolean>()
     val flag: LiveData<Boolean> = _flag
+
     private var _loginInfo = MutableLiveData<Login>()
     val loginInfo: LiveData<Login> = _loginInfo
 
-    fun login(account: String, password: String): MutableLiveData<Boolean> {
+    fun login(account: String, password: String){
         LoginRetrofitUtil.api.login(account, password)
             .enqueue(object : Callback<Login> {
                 override fun onResponse(
@@ -25,7 +26,7 @@ class LoginViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         if (response.body()!!.code == 200) {
-                            Show.showLog("用户登录网络请求成功！${response.body()!!}")
+                            Show.showLog("用户登录网络请求成功！${response.body()!!.code}")
                             _loginInfo.postValue(response.body()!!)
                             _flag.postValue(true)
                         } else {
@@ -37,9 +38,8 @@ class LoginViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<Login>, t: Throwable) {
                     Show.showLog("用户登录网络请求失败！${t.message}")
-                    _flag.postValue(true)
+                    _flag.postValue(false)
                 }
             })
-        return _flag
     }
 }

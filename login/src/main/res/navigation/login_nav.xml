@@ -9,16 +9,7 @@
         android:id="@+id/loginFragment"
         android:name="com.sychen.login.ui.login.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/login_fragment" >
-        <action
-            android:id="@+id/action_loginFragment_to_userFragment"
-            app:destination="@id/userFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/userFragment"
-        android:name="com.sychen.login.ui.user.UserFragment"
-        android:label="user_fragment"
-        tools:layout="@layout/user_fragment" />
+        tools:layout="@layout/login_fragment" />
     <fragment
         android:id="@+id/greetFragment"
         android:name="com.sychen.login.ui.welcome.GreetFragment"

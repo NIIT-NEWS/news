@@ -2,4 +2,6 @@
     <string name="app_name">Login</string>
     <string name="please_insert_account">请输入账号</string>
     <string name="please_insert_psd">请输入密码</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

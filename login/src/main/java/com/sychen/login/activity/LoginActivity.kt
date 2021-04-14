@@ -1,20 +1,28 @@
-package com.sychen.anew.activity
+package com.sychen.login.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.sychen.anew.R
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.sychen.basic.MessageEvent
 import com.sychen.basic.MessageType
+import com.sychen.login.R
+import com.sychen.login.ui.welcome.GreetViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class WelcomeActivity : AppCompatActivity() {
+
+const val TAG = "TAG"
+
+class LoginActivity : AppCompatActivity() {
+    private lateinit var viewModel: GreetViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        setContentView(R.layout.activity_login)
     }
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -33,7 +41,7 @@ class WelcomeActivity : AppCompatActivity() {
             }
             MessageType.TypeOne -> {
                 val intent = Intent()
-                intent.setClass(application, MainActivity::class.java)
+                intent.setClass(application, UserActivity::class.java)
                 startActivity(intent)
             }
         }

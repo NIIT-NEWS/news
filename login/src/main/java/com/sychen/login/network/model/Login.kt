@@ -19,6 +19,8 @@ data class Login(
                 @SerializedName("token")
                 val token: String = "", // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0aW1lU3RhbXAiOjE2MTgwNjY1MTk4MDgsInVzZXJQYXNzd29yZCI6IjEyMzQ1NiIsInVzZXJOYW1lIjoiY3N5In0.to3IV334qQbtSGYK1SYT6vGbsOEFSaeCHu9yzT3_w8U
                 @SerializedName("username")
-                val username: String = "" // csy
+                val username: String = "" ,
+                @SerializedName("password")
+                val password: String = "" // csy
         )
 }

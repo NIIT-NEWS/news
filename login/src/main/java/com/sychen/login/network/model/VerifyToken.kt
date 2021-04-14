@@ -12,9 +12,11 @@ data class VerifyToken(
         data class Data(
                 @SerializedName("timeStamp")
                 val timeStamp: String = "", // 1618071953934
-                @SerializedName("userName")
+                @SerializedName("username")
                 val userName: String = "", // csy
-                @SerializedName("userPassword")
-                val userPassword: String = "" // 123456
+                @SerializedName("password")
+                val userPassword: String = "" ,
+                @SerializedName("userid")
+                val userId: String = ""
         )
 }
