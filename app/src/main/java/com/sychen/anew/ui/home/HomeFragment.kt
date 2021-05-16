@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sychen.anew.R
-import com.sychen.basic.Utils.StatusBarHeight
+import com.sychen.basic.util.StatusBarHeight
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
@@ -33,8 +31,6 @@ class HomeFragment : Fragment() {
 
     }
     private fun initTopGuideLine(){
-        home_top_guideline.setGuidelineBegin(StatusBarHeight().get(requireContext()))
+        home_top_guideline.setGuidelineBegin(StatusBarHeight.get())
     }
-
-
 }

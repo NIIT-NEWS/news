@@ -21,6 +21,8 @@ data class Login(
                 @SerializedName("username")
                 val username: String = "" ,
                 @SerializedName("password")
-                val password: String = "" // csy
+                val password: String = "" ,// csy
+                @SerializedName("nickname")
+                val nickname: String = "" // csy
         )
 }

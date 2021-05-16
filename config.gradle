@@ -6,7 +6,7 @@ ext {
             TARGETSDKVERSION : 30,
             VERSIONCODE      : 1,
             VERSIONNAME      : '1.0',
-            IS_APPLICATION   : true
+            IS_APPLICATION   : false
     ]
     dependencies = [
             publicimplementation: [
@@ -16,7 +16,6 @@ ext {
                     'androidx.constraintlayout:constraintlayout:2.0.4',
                     'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0',
                     'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0',
-                    'androidx.lifecycle:lifecycle-compiler:2.3.0',
                     'androidx.lifecycle:lifecycle-service:2.3.0-alpha02',
                     'androidx.lifecycle:lifecycle-common-java8:2.3.0',
                     'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2',

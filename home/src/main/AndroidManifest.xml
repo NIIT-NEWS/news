@@ -39,10 +39,10 @@
         <service android:name="com.amap.api.location.APSService" />
         <meta-data android:name="com.amap.api.v2.apikey" android:value="e2c3645ff446e7ceea65cc47b950469e">
         </meta-data>
-        <activity android:name=".HomeActivity">
+        <activity android:name=".activity.NewsActivity"/>
+        <activity android:name=".activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

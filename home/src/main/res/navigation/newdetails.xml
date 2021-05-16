@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newdetails"
+    app:startDestination="@id/newDetailsFragment">
+
+    <fragment
+        android:id="@+id/newDetailsFragment"
+        android:name="com.sychen.home.ui.newdetails.NewDetailsFragment"
+        android:label="new_details_fragment"
+        tools:layout="@layout/new_details_fragment" >
+        <action
+            android:id="@+id/action_newDetailsFragment_to_reviewFragment2"
+            app:destination="@id/reviewFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewFragment2"
+        android:name="com.sychen.home.ui.review.ReviewFragment"
+        android:label="review_fragment"
+        tools:layout="@layout/review_fragment" >
+        <action
+            android:id="@+id/action_reviewFragment2_to_newDetailsFragment"
+            app:destination="@id/newDetailsFragment" />
+    </fragment>
+</navigation>

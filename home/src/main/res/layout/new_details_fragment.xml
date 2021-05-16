@@ -1,79 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="top|center">
-
-        <ImageView
-            android:id="@+id/new_detail_img"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/gradient" />
-
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_gravity="left|top"
-            android:layout_margin="10dp"
-            android:src="@drawable/ic_baseline_arrow_back_ios_24" />
-
-        <TextView
-            android:id="@+id/new_create"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:layout_margin="10dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/app_name"
-            android:textColor="@color/grey"
-            android:textSize="15sp" />
-    </FrameLayout>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/new_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|top"
-            android:layout_margin="10dp"
-            android:fontFamily="sans-serif-black"
-            android:maxLines="2"
-            android:text="TITLE"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_gravity="top|center">
 
-        <ScrollView
+            <ImageView
+                android:id="@+id/new_detail_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/gradient" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="left|top"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+
+            <TextView
+                android:id="@+id/new_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="25dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/app_name"
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/new_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                tools:text="2021-04-18" />
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintlayout_n"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/new_info"
+                android:id="@+id/new_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="left|top"
                 android:layout_margin="10dp"
-                android:fontFamily="sans-serif"
-                android:text="INFO"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="3"
+                android:text="@string/title"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
-        </ScrollView>
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/webview"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <WebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/new_title"
+                app:layout_constraintStart_toStartOf="@+id/new_title"
+                app:layout_constraintTop_toBottomOf="@+id/new_title" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="20dp"
+        android:backgroundTint="#0091EA"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_comment_alt_edit" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

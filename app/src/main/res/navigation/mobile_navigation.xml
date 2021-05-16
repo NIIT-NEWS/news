@@ -18,8 +18,8 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_user"
         android:name="com.sychen.anew.ui.user.UserFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
 </navigation>

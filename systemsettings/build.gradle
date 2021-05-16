@@ -1,0 +1,70 @@
+if (rootProject.ext.android.IS_APPLICATION) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion rootProject.ext.android.COMPILESDKVERSION
+    buildToolsVersion rootProject.ext.android.BUILDTOOLSVERSION
+
+    defaultConfig {
+        if (rootProject.ext.android.IS_APPLICATION) {
+            applicationId "com.sychen.systemsettings"
+        }
+        minSdkVersion rootProject.ext.android.MINSDKVERSION
+        targetSdkVersion rootProject.ext.android.TARGETSDKVERSION
+        versionCode rootProject.ext.android.VERSIONCODE
+        versionName rootProject.ext.android.VERSIONNAME
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main {
+            if (rootProject.ext.android.IS_APPLICATION) {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                java.srcDir 'src/main/module'
+            } else {
+                manifest.srcFile 'src/main/manifest/AndroidManifest.xml'
+            }
+        }
+    }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.getName())
+        }
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation rootProject.ext.dependencies.publicimplementation
+    implementation project(rootProject.ext.dependencies.other)
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    kapt  'com.alibaba:arouter-compiler:1.2.2'
+}

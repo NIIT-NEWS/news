@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion rootProject.ext.android.COMPILESDKVERSION
     buildToolsVersion rootProject.ext.android.BUILDTOOLSVERSION
@@ -27,6 +28,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.getName())
+        }
+    }
 }
 
 dependencies {
@@ -37,10 +43,13 @@ dependencies {
     if (!rootProject.ext.android.IS_APPLICATION){
         implementation project(path: ':home')
         implementation project(path: ':login')
+        implementation project(path: ':user')
+        implementation project(path: ':systemsettings')
     }
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     //bottom-navigation
     implementation 'com.etebarian:meow-bottom-navigation:1.3.1'
+    kapt  'com.alibaba:arouter-compiler:1.2.2'
 }

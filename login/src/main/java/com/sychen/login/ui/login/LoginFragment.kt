@@ -4,19 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.alibaba.android.arouter.launcher.ARouter
 import com.sychen.basic.*
+import com.sychen.basic.util.Show
+import com.sychen.basic.util.dataStoreSave
 import com.sychen.login.R
 import com.sychen.login.database.viewmodel.UserViewModel
 import com.sychen.login.database.model.User
 import kotlinx.android.synthetic.main.login_fragment.*
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 
-const val TAG = "TAG"
 
 class LoginFragment : Fragment() {
     private lateinit var loginViewModel: LoginViewModel
@@ -33,13 +33,13 @@ class LoginFragment : Fragment() {
         loginViewModel = ViewModelProvider(requireActivity()).get(LoginViewModel::class.java)
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         initView()
-
     }
 
     //初始化页面
     private fun initView() {
         //登录按钮监听
-        login_btn.setOnClickListener { v ->
+        login_btn.setOnClickListener {
+            login_loader.visibility = View.VISIBLE
             val account = account_edit.text.toString()
             val pwd = password_edit.text.toString()
             //进行登录请求
@@ -78,20 +78,19 @@ class LoginFragment : Fragment() {
                                 )
                             }
                             //使用eventbus发送广播启动activity
-                            val msg = MessageEvent(MessageType.TypeOne).put("startActivity")
-                            EventBus.getDefault().post(msg)
+//                            val msg = MessageEvent(MessageType.TypeOne).put("startActivity")
+//                            EventBus.getDefault().post(msg)
+                            ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY).navigation();
                         })
                     })
-                    showToast("登录成功")
+                    login_loader.visibility = View.INVISIBLE
+                    Show.showToastShort("登录成功")
                 } else {
-                    showToast("登录失败")
+                    login_loader.visibility = View.INVISIBLE
+                    Show.showToastShort("登录失败")
                 }
             })
         }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
 }

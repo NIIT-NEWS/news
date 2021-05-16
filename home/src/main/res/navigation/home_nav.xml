@@ -9,18 +9,5 @@
         android:id="@+id/homeFragment"
         android:name="com.sychen.home.ui.home.HomeFragment"
         android:label="home_fragment"
-        tools:layout="@layout/home_fragment" >
-        <action
-            android:id="@+id/action_homeFragment_to_newDetailsFragment"
-            app:destination="@id/newDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/newDetailsFragment"
-        android:name="com.sychen.home.ui.newdetails.NewDetailsFragment"
-        android:label="new_details_fragment"
-        tools:layout="@layout/new_details_fragment" >
-        <action
-            android:id="@+id/action_newDetailsFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+        tools:layout="@layout/home_fragment" />
 </navigation>

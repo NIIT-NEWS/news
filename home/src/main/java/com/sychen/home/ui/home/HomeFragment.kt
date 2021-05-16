@@ -14,21 +14,24 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sychen.basic.Utils.Show
+import com.sychen.basic.MessageEvent
+import com.sychen.basic.MessageType
+import com.sychen.basic.util.Show
 import com.sychen.home.R
 import com.sychen.home.services.LocationService
 import kotlinx.android.synthetic.main.home_fragment.*
-import java.time.LocalTime
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class HomeFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
-
     private lateinit var viewModel: HomeViewModel
     private lateinit var newsListRecyclerAdapter: NewsListRecyclerAdapter
+    override fun onStart() {
+        super.onStart()
+        val msg = MessageEvent(MessageType.TypeTwo).put("onStart")
+        EventBus.getDefault().post(msg)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +43,7 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        uploadLocation()
+//        uploadLocation()
         newsListRecyclerAdapter = NewsListRecyclerAdapter()
         home_recyclerview.apply {
             layoutManager =
@@ -81,7 +84,7 @@ class HomeFragment : Fragment() {
                             }
                             Timer().schedule(object : TimerTask() {
                                 override fun run() {
-                                    viewModel.uploadLocation(lon,lat,"1","10:54")
+                                    viewModel.uploadLocation(lon, lat, "1", "10:54")
                                 }
                             }, Date(), 60000)
 
@@ -96,15 +99,9 @@ class HomeFragment : Fragment() {
         )
     }
 
-    fun getStringIndex(str: String): Int {
-        var flag = -1
-        for (i in str.indices) {
-            if (str[i] == ',') {
-                println("------")
-                flag = i
-            }
-        }
-        return flag
+    override fun onStop() {
+        super.onStop()
+        val msg = MessageEvent(MessageType.TypeTwo).put("onStop")
+        EventBus.getDefault().post(msg)
     }
-
 }

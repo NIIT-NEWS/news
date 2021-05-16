@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.alibaba.android.arouter.launcher.ARouter
 import com.sychen.basic.*
+import com.sychen.basic.util.dataStoreRead
 import com.sychen.login.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -22,6 +24,7 @@ import org.greenrobot.eventbus.EventBus
  * 通过->跳转主页面
  * 不通过->跳转登录页面
  */
+
 class GreetFragment : Fragment() {
 
     private lateinit var greetViewModel: GreetViewModel
@@ -60,16 +63,10 @@ class GreetFragment : Fragment() {
                 if (this == true) {
                     lifecycleScope.launch {
                         greetViewModel.tokenInfo.observe(requireActivity(), {
-                            /**
-                             * 通过Bundle传递参数->USER_INFO:token信息
-                             * 进入用户页面
-                             */
-//                            val intent = Intent()
-//                            intent.setClass(requireActivity(),UserActivity::class.java)
-//                            startActivity(intent)
                             //使用eventbus发送广播启动activity
-                            val msg = MessageEvent(MessageType.TypeOne).put("startActivity")
-                            EventBus.getDefault().post(msg)
+//                            val msg = MessageEvent(MessageType.TypeOne).put("startActivity")
+//                            EventBus.getDefault().post(msg)
+                            ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY).navigation();
                         })
                     }
                 } else {

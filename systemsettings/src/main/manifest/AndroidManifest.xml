@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sychen.systemsettings">
+    <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <application
+        android:name="com.sychen.basic.MyApplication">
+        <activity android:name="com.sychen.systemsettings.SettingsActivity" />
+    </application>
+</manifest>

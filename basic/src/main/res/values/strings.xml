@@ -3,4 +3,18 @@
     <string name="MY_DATA">MyData</string>
     <string name="likesonglist" />
     <string name="uid" />
+    <string name="tips">温馨提示</string>
+    <string name="update_done">更新完成</string>
+    <string name="ok">确定</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_name">用户名</string>
+    <string name="user_avatar">头像</string>
+    <string name="user_set_title">个人信息</string>
+    <string name="click_photo">点击拍照</string>
+    <string name="click_upload_avatar">相册选择</string>
+    <string name="take_photo">拍照</string>
+    <string name="confirm_photo">确定</string>
+    <string name="please_input_new_name">请输入新的用户名</string>
+    <string name="username_alread_exit">用户名已经存在</string>
 </resources>

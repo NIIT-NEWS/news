@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/set_nav"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.sychen.systemsettings.ui.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_cardSetFragment"
+            app:destination="@id/cardSetFragment"
+            app:enterAnim="@anim/left_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardSetFragment"
+        android:name="com.sychen.systemsettings.ui.card.CardSetFragment"
+        android:label="fragment_card_set"
+        tools:layout="@layout/fragment_card_set" >
+        <action
+            android:id="@+id/action_cardSetFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/right_to_left"
+            app:exitAnim="@anim/right_to_left" />
+    </fragment>
+</navigation>

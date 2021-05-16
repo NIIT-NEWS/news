@@ -1,5 +1,6 @@
 package com.sychen.home.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.gson.Gson
+import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesLoad
+import com.sychen.basic.util.dataStoreRead
 import com.sychen.home.R
-import com.sychen.home.network.model.NewsC
+import com.sychen.home.activity.NewsActivity
+import com.sychen.home.network.model.New
 import kotlinx.android.synthetic.main.news_item.view.*
 
 
-class NewsListRecyclerAdapter : ListAdapter<NewsC.Data, NewsListViewHolder>(DIFFCALLBACK) {
+class NewsListRecyclerAdapter : ListAdapter<New.Data, NewsListViewHolder>(DIFFCALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsListViewHolder {
         return NewsListViewHolder(
@@ -27,8 +31,11 @@ class NewsListRecyclerAdapter : ListAdapter<NewsC.Data, NewsListViewHolder>(DIFF
     override fun onBindViewHolder(holder: NewsListViewHolder, position: Int) {
         val newsList = getItem(position)
         with(holder.itemView) {
+            cardView.cardElevation = sharedPreferencesLoad<Int>("CARD_RADIUS").toString().toFloat()
+            cardView.radius = sharedPreferencesLoad<Int>("CARD_ELEVATION").toString().toFloat()
             new_title.text = newsList.newTitle
-            new_create.text = newsList.creator
+            new_author.text = newsList.author
+            new_date.text = newsList.date
             new_img.load(newsList.newTitleImgUrl) {
                 // 淡入淡出
                 crossfade(true)
@@ -37,21 +44,20 @@ class NewsListRecyclerAdapter : ListAdapter<NewsC.Data, NewsListViewHolder>(DIFF
             }
         }
         holder.itemView.setOnClickListener {
-            Bundle().apply {
-                putString("NEWS",Gson().toJson(newsList))
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_homeFragment_to_newDetailsFragment, this)
-            }
+            val intent = Intent()
+            intent.setClass(holder.itemView.context,NewsActivity::class.java)
+            intent.putExtra("NEWS",Gson().toJson(newsList))
+            holder.itemView.context.startActivity(intent)
         }
 
     }
 
-    object DIFFCALLBACK : DiffUtil.ItemCallback<NewsC.Data>() {
-        override fun areItemsTheSame(oldItem: NewsC.Data, newItem: NewsC.Data): Boolean {
+    object DIFFCALLBACK : DiffUtil.ItemCallback<New.Data>() {
+        override fun areItemsTheSame(oldItem: New.Data, newItem: New.Data): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: NewsC.Data, newItem: NewsC.Data): Boolean {
+        override fun areContentsTheSame(oldItem: New.Data, newItem: New.Data): Boolean {
             return oldItem == newItem
         }
     }

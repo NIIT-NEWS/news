@@ -6,13 +6,11 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.amap.api.location.AMapLocationQualityReport
-import com.sychen.basic.Utils.Show
 
 class LocationService : LifecycleService() {
     private lateinit var locationClient: AMapLocationClient
@@ -64,9 +62,9 @@ class LocationService : LifecycleService() {
         val mOption = AMapLocationClientOption()
         mOption.locationMode =
             AMapLocationClientOption.AMapLocationMode.Hight_Accuracy //可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-        mOption.isGpsFirst = false //可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+        mOption.isGpsFirst = true //可选，设置是否gps优先，只在高精度模式下有效。默认关闭
         mOption.httpTimeOut = 30000 //可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        mOption.interval = 10000 //可选，设置定位间隔。默认为2秒
+        mOption.interval = 1_000*60*60 //可选，设置定位间隔。默认为2秒
         mOption.isNeedAddress = true //可选，设置是否返回逆地理地址信息。默认是true
         mOption.isOnceLocation = false //可选，设置是否单次定位。默认是false
         mOption.isOnceLocationLatest =
