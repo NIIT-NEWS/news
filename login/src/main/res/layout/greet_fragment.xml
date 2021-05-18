@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".ui.welcome.GreetFragment">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -12,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintVertical_bias="0.0"
+        android:background="@color/blue"
         app:lottie_autoPlay="true"
-        app:lottie_loop="false"
-        app:lottie_rawRes="@raw/newswelcome" />
+        app:lottie_rawRes="@raw/welcome" />
 
 </FrameLayout>
