@@ -1,12 +1,16 @@
 package com.sychen.user.ui.previewcamera
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.Show
 import com.sychen.user.network.UserRetrofitUtil
 import com.sychen.user.network.model.UpdateUser
 import com.sychen.user.network.model.UploadAvatar
+import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -16,13 +20,14 @@ import retrofit2.Response
 import java.io.File
 
 class PreviewPhotoViewModel : ViewModel() {
-    private var _userAvatarUrl = MutableLiveData<String>()
-    val userAvatarUrl: LiveData<String> = _userAvatarUrl
+    private val _userAvatarUrl by lazy {
+        MutableLiveData<UploadAvatar>()
+    }
 
     /**
      * 上传用户头像
      */
-    fun uploadAvatar(file: File) {
+    fun uploadAvatar(file: File) : LiveData<UploadAvatar>{
         // 创建 RequestBody，用于封装构建RequestBody
         val requestFile = RequestBody.create(MediaType.parse("image/jpg"), file)
         // MultipartBody.Part  和后端约定 好Key，这里的partName是用file
@@ -33,28 +38,16 @@ class PreviewPhotoViewModel : ViewModel() {
             MediaType.parse("multipart/form-data"),
             descriptionString
         )
-        //上传图片获取url
-        UserRetrofitUtil.api.uploadAvatar(description, body)
-            .enqueue(object : Callback<UploadAvatar> {
-                override fun onResponse(
-                    call: Call<UploadAvatar>,
-                    response: Response<UploadAvatar>
-                ) {
-                    if (response.isSuccessful) {
-                        when (response.body()!!.code) {
-                            200 -> {
-                                Show.showLog("用户头像上传成功！${response.body()!!.data.url}")
-                                _userAvatarUrl.postValue(response.body()!!.data.url)
-                            }
-                            else -> Show.showLog("用户头像上传失败")
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<UploadAvatar>, t: Throwable) {
-                    Show.showLog("用户头像上传失败！${t.message}")
-                }
-            })
+        viewModelScope.launch {
+            try {
+                val result = UserRetrofitUtil.api.uploadAvatar(description, body)
+                _userAvatarUrl.postValue(result.data)
+            } catch (e: Exception) {
+                Log.e(TAG, "uploadAvatar: $e", )
+                _userAvatarUrl.postValue(null)
+            }
+        }
+        return _userAvatarUrl
     }
 
 

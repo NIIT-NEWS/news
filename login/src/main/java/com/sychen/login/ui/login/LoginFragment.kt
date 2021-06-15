@@ -1,14 +1,18 @@
 package com.sychen.login.ui.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import com.alibaba.android.arouter.launcher.ARouter
 import com.sychen.basic.*
+import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.util.DialogUtil
 import com.sychen.basic.util.Show
 import com.sychen.basic.util.dataStoreSave
 import com.sychen.login.R
@@ -43,53 +47,47 @@ class LoginFragment : Fragment() {
             val account = account_edit.text.toString()
             val pwd = password_edit.text.toString()
             //进行登录请求
-            loginViewModel.login(account, pwd)
-            /**
-             * param : flag(boolean) 验证登录请求是否成功
-             * true-> 存储token、存储用户信息->跳转到用户主界面
-             * false-> 提示登录失败
-             */
-            loginViewModel.flag.observe(requireActivity(), { flag ->
-                if (flag) {
-                    //获取登录信息
-                    loginViewModel.loginInfo.observe(requireActivity(), { info ->
-                        //存储键值对保存TOKEN,USER_ID
+            loginViewModel.login(account, pwd).observe(requireActivity(), { userInfo ->
+                when (userInfo.code) {
+                    200 -> {
+                        login_loader.visibility = View.GONE
+                        DialogUtil.alertDialog(requireContext(),"登录成功")
                         lifecycleScope.launch {
-                            dataStoreSave("USER_ID",info.data.id.toString())
-                            dataStoreSave("TOKEN",info.data.token)
+                            dataStoreSave("USER_ID", userInfo.data.id.toString())
+                            dataStoreSave("TOKEN", userInfo.data.token)
                         }
-                        /**
-                         * 判断数据库中是否存在用户
-                         * false->在数据库中插入用户数据
-                         * true->啥也不干
-                         */
                         userViewModel.verifyExist(account).observe(requireActivity(), { verify ->
                             if (verify.isEmpty()) {
                                 //数据库插入数据
                                 userViewModel.insertUser(
                                     User(
                                         0,
-                                        info.data.username,
+                                        userInfo.data.username,
                                         "null",
-                                        info.data.avatar,
-                                        info.data.role,
-                                        info.data.token
+                                        userInfo.data.avatar,
+                                        userInfo.data.role,
+                                        userInfo.data.token
                                     )
                                 )
                             }
-                            //使用eventbus发送广播启动activity
-//                            val msg = MessageEvent(MessageType.TypeOne).put("startActivity")
-//                            EventBus.getDefault().post(msg)
-                            ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY).navigation();
                         })
-                    })
-                    login_loader.visibility = View.INVISIBLE
-                    Show.showToastShort("登录成功")
-                } else {
-                    login_loader.visibility = View.INVISIBLE
-                    Show.showToastShort("登录失败")
+                        Show.showToastShort("登录成功")
+                        ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY).navigation()
+                        requireActivity().finish()
+                    }
+                    201 -> {
+                        Show.showToastShort("登录失败，用户名或密码错误")
+                        login_loader.visibility = View.GONE
+                    }
+                    else -> {
+                        Show.showToastShort("错误")
+                        login_loader.visibility = View.GONE
+                    }
                 }
             })
+        }
+        go_rigster.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
 

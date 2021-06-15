@@ -1,19 +1,23 @@
 package com.sychen.login.network
 
+import com.sychen.basic.network.BaseResult
 import com.sychen.login.network.model.*
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 interface API {
     @POST("/user/login")
-    fun login(
+    suspend fun login(
         @Query("username") username: String,
         @Query("password") password: String,
-    ): Call<Login>
+    ): BaseResult<UserInfo>
 
-    @GET("/user/verify-token")
-    fun verifyToken(
+    @POST("/user/verify-token")
+    suspend fun verifyToken(
         @Header("token") token: String
-    ): Call<VerifyToken>
+    ): BaseResult<VerifyToken>
 
+    @POST("/user/register")
+    suspend fun register(@Body user: RequestBody): BaseResult<UserInfo>
 }

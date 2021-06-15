@@ -5,12 +5,21 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
+import androidx.core.content.contentValuesOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +29,8 @@ import coil.transform.RoundedCornersTransformation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.MyApplication.Companion._context
+import com.sychen.basic.util.DialogUtil
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.basic.util.dataStoreSave
 import com.sychen.basic.util.getRealPath
@@ -37,14 +48,18 @@ import java.io.File
 
 class UserSetFragment : Fragment() {
     companion object {
-        const val IMAGE_REQUEST_CODE = 1
         const val fromAlbum = 2
+        const val takePhoto = 1
     }
 
-    private lateinit var viewModel: UserSetViewModel
+    private val viewModel by lazy {
+        UserSetViewModel()
+    }
     private lateinit var previewPhotoViewModel: PreviewPhotoViewModel
     private lateinit var userInfo: UserInfo
     private lateinit var userViewModel: UserViewModel
+    private lateinit var imageUri: Uri
+    private lateinit var outputImage: File
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +70,6 @@ class UserSetFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(UserSetViewModel::class.java)
         previewPhotoViewModel = ViewModelProvider(this).get(PreviewPhotoViewModel::class.java)
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         //获取用户信息
@@ -74,7 +88,7 @@ class UserSetFragment : Fragment() {
     @SuppressLint("Range")
     private fun initView() {
         user_set_avatar.apply {
-            this.load(userInfo.data.avatar) {
+            this.load(userInfo.avatar) {
                 // 淡入淡出
                 crossfade(true)
                 transformations(RoundedCornersTransformation(18F))
@@ -86,7 +100,7 @@ class UserSetFragment : Fragment() {
             }
         }
         user_set_name.apply {
-            this.text = userInfo.data.nickname
+            this.text = userInfo.nickname
         }
         name_layout.setOnClickListener {
             Navigation.findNavController(requireView())
@@ -119,8 +133,23 @@ class UserSetFragment : Fragment() {
             }
             show()
             tv_take_photo.setOnClickListener {
-                Navigation.findNavController(requireView())
-                    .navigate(R.id.action_userSetFragment_to_cameraxFragment)
+                outputImage = File(_context!!.externalCacheDir, "output_image.jpg")
+                if (outputImage.exists()) {
+                    outputImage.delete()
+                }
+                outputImage.createNewFile()
+                imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    FileProvider.getUriForFile(
+                        _context!!,
+                        "com.sychen.user.fileprovider",
+                        outputImage
+                    )
+                } else {
+                    Uri.fromFile(outputImage)
+                }
+                val intent = Intent("android.media.action.IMAGE_CAPTURE")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                startActivityForResult(intent, takePhoto)
                 this.dismiss()
             }
             tv_take_pic.setOnClickListener {
@@ -138,20 +167,6 @@ class UserSetFragment : Fragment() {
         }
     }
 
-    private fun alertDialog(context: Context, message: String) {
-        Dialog(context, R.style.DialogTheme).apply {
-            setContentView(R.layout.alert_dialog)
-            window!!.apply {
-                setGravity(Gravity.CENTER)
-                setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            }
-            show()
-            alert_confirm.setOnClickListener {
-                dismiss()
-            }
-            alert_content.text = message
-        }
-    }
 
     /**
      * 从本地读取到选取的uri
@@ -172,10 +187,9 @@ class UserSetFragment : Fragment() {
                         val realPathFromUri =
                             getRealPath.getRealPathFromUri(requireContext(), uri)
                         val file = File(realPathFromUri)
-                        Log.e(TAG, file.toString() )
-                        previewPhotoViewModel.uploadAvatar(file)
-                        userGson()
-                        saveUserInfo()
+                        previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(),{
+                            viewModel.updateAvatar(it.url)
+                        })
                         user_set_avatar.apply {
                             this.load(uri) {
                                 // 淡入淡出
@@ -185,46 +199,55 @@ class UserSetFragment : Fragment() {
                                 error(R.drawable.ic_baseline_error_24)
                             }
                         }
+                        DialogUtil.alertDialog(requireContext(),"更换成功！")
                     }
                 }
             }
-        }
-    }
-
-
-    /**
-     * 将用户的信息转换成json数据
-     * 通过view model发送到服务器
-     */
-    private fun userGson() {
-        previewPhotoViewModel.userAvatarUrl.observe(requireActivity(), {
-            val gson = GsonBuilder().create()
-            val updateUser = User()
-            with(updateUser) {
-                userid = userInfo.data.id
-                username = userInfo.data.username
-                password = userInfo.data.password
-                avatar = it.toString()
-                role = userInfo.data.role
-            }
-            val user = gson.toJson(updateUser)
-            previewPhotoViewModel.updateUserInfo(user)
-        })
-    }
-
-    /**
-     * 存储用户信息
-     * 在此处主要更新头像信息
-     */
-    private fun saveUserInfo() {
-        lifecycleScope.launch {
-            userViewModel.getUserInfo(dataStoreRead("USER_ID"))
-            userViewModel.userInfo.observe(requireActivity(), { userInfo ->
-                lifecycleScope.launch {
-                    dataStoreSave<String>("USER_INFO", Gson().toJson(userInfo))
+            takePhoto -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val bitmap =
+                        BitmapFactory.decodeStream(
+                            _context!!.contentResolver.openInputStream(
+                                imageUri
+                            )
+                        )
+                    try {
+                        val realPathFromUri =
+                            getRealPath.getRealPathFromUri(requireContext(), imageUri)
+                        val file = File(realPathFromUri)
+                        previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(),{
+                            viewModel.updateAvatar(it.url)
+                        })
+                    } catch (e: Exception) {
+                        Log.e(TAG, "onActivityResult: $e")
+                    }
+                    DialogUtil.alertDialog(requireContext(),"更换成功！")
+                    user_set_avatar.setImageBitmap(rotateIfRequired(bitmap))
                 }
-            })
+            }
         }
+    }
+
+    private fun rotateIfRequired(bitmap: Bitmap): Bitmap {
+        val exif = ExifInterface(outputImage.path)
+        return when (exif.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270)
+            else -> bitmap
+        }
+    }
+
+    private fun rotateBitmap(bitmap: Bitmap, degree: Int): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degree.toFloat())
+        val rotatedBitmap =
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        bitmap.recycle() //回收
+        return rotatedBitmap
     }
 
 

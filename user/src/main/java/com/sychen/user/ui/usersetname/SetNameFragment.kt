@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.util.DialogUtil
+import com.sychen.basic.util.Show
 import com.sychen.basic.util.dataStoreRead
+import com.sychen.basic.util.dataStoreSave
 import com.sychen.user.R
 import com.sychen.user.network.model.User
 import com.sychen.user.network.model.UserInfo
@@ -75,8 +80,6 @@ class SetNameFragment : Fragment() {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     inputStatus.value = InputStatus.InputEnd
-                    //检索用户名是否存在
-                    viewModel.verifyName(s.toString())
                 }
 
                 override fun afterTextChanged(s: Editable?) {
@@ -84,20 +87,6 @@ class SetNameFragment : Fragment() {
                 }
             })
         }
-        //用户存在的话，提示文字出现
-        viewModel.flag.observe(requireActivity(), {
-            when (it) {
-                true -> {
-                    hint_text.text = resources.getString(R.string.username_alread_exit)
-                    confirm_button.isEnabled = false
-                }
-                false -> {
-                    hint_text.text = " "
-                    confirm_button.isEnabled = true
-                }
-            }
-
-        })
         inputStatus.observe(requireActivity(), {
             when (inputStatus.value) {
                 /** 键盘没有输入的时候
@@ -121,10 +110,25 @@ class SetNameFragment : Fragment() {
                         isClickable = true
                         background = resources.getDrawable(R.drawable.confirm_btn)
                         setTextColor(resources.getColor(R.color.white))
-                        setOnClickListener {
-                            userGson()
-                            Navigation.findNavController(it)
-                                .navigate(R.id.action_setNameFragment_to_userSetFragment)
+                        setOnClickListener { v ->
+                            viewModel.updateName(edit_username.text.toString())
+                                .observe(requireActivity(), {
+                                    when (it) {
+                                        200 -> {
+                                            Navigation.findNavController(v)
+                                                .navigate(R.id.action_setNameFragment_to_userSetFragment)
+                                            DialogUtil.alertDialog(requireContext(), "更新成功！")
+                                            saveUserNameJson(edit_username.text.toString())
+                                        }
+                                        201 -> {
+                                            DialogUtil.alertDialog(requireContext(), "更新失败！")
+                                        }
+                                        else -> {
+                                            DialogUtil.alertDialog(requireContext(), "更新失败！")
+                                        }
+                                    }
+                                })
+
                         }
                     }
                     //清除键
@@ -137,21 +141,13 @@ class SetNameFragment : Fragment() {
                 }
             }
         })
-
     }
-    //转换成json数据并更新数据
-    private fun userGson() {
-        val gson = GsonBuilder().create()
-        val updateUser = User()
-        with(updateUser) {
-            userid = userInfo.data.id
-            username = edit_username.text.toString()
-            password = userInfo.data.password
-            avatar = userInfo.data.avatar
-            role = userInfo.data.role
+
+    private fun saveUserNameJson(name: String) {
+        val newUserInfo: UserInfo = userInfo.copy(nickname = name)
+        lifecycleScope.launch {
+            dataStoreSave("USER_INFO", Gson().toJson(newUserInfo))
         }
-        val user = gson.toJson(updateUser)
-        previewPhotoViewModel.updateUserInfo(user)
     }
 
 

@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sychen.jwxx.R
+import com.sychen.jwxx.ui.publicnotice.NoticeAdapter
+import kotlinx.android.synthetic.main.notice_fragment.*
 
 class DownloadFragment : Fragment() {
 
@@ -15,7 +18,7 @@ class DownloadFragment : Fragment() {
     }
 
     private lateinit var viewModel: DownloadViewModel
-
+    private lateinit var downloadAdapter: DownloadAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,7 +29,14 @@ class DownloadFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(DownloadViewModel::class.java)
-        // TODO: Use the ViewModel
+        downloadAdapter = DownloadAdapter()
+        recyclerview.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
+            adapter = downloadAdapter
+        }
+        viewModel.downloadList.observe(requireActivity(),{
+            downloadAdapter.submitList(it)
+        })
     }
 
 }

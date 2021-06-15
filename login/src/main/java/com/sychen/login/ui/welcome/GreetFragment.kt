@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.alibaba.android.arouter.launcher.ARouter
 import com.sychen.basic.*
+import com.sychen.basic.util.Show
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.login.R
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,9 @@ import org.greenrobot.eventbus.EventBus
 
 class GreetFragment : Fragment() {
 
-    private lateinit var greetViewModel: GreetViewModel
+    private val ViewModel by lazy {
+        GreetViewModel()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,43 +41,25 @@ class GreetFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        greetViewModel = ViewModelProvider(this).get(GreetViewModel::class.java)
-        /**
-         * 读取文件中token
-         */
-        lifecycleScope.launch {
-            val token = dataStoreRead<String>("TOKEN")
-            greetViewModel.verifyToken(token)
-        }
-        /**
-         * 计时2秒进入应用，检查token是否存在
-         * 存在->验证->token有效->进入主页面->进入userFragment
-         * 存在->验证->token过期->重新登录->进入LoginFragment
-         * 不存在->进入LoginFragment
-         */
         Handler(Looper.getMainLooper()).postDelayed({
-            /**
-             * 判断flag参数
-             * param : flag --- true: token验证通过，false即为token不通过
-             * flag->true->验证通过进入主页面
-             * flag->false->验证失败进入登录页面
-             */
-            greetViewModel.flag.value.apply {
-                if (this == true) {
-                    lifecycleScope.launch {
-                        greetViewModel.tokenInfo.observe(requireActivity(), {
-                            //使用eventbus发送广播启动activity
-//                            val msg = MessageEvent(MessageType.TypeOne).put("startActivity")
-//                            EventBus.getDefault().post(msg)
-                            ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY).navigation();
-                        })
+            ViewModel.verifyToken()
+            ViewModel.status.observe(requireActivity(), {
+                when (it) {
+                    TokenStatus.Success -> {
+                        ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY)
+                            .navigation()
+                        requireActivity().finish()
                     }
-                } else {
-                    //进入登录页面
-                    Navigation.findNavController(requireView())
-                        .navigate(R.id.action_greetFragment_to_loginFragment)
+                    TokenStatus.Expired -> {
+                        Navigation.findNavController(requireView())
+                            .navigate(R.id.action_greetFragment_to_loginFragment)
+                    }
+                    TokenStatus.Failed -> {
+                        Navigation.findNavController(requireView())
+                            .navigate(R.id.action_greetFragment_to_loginFragment)
+                    }
                 }
-            }
+            })
         }, 2_000)
     }
 

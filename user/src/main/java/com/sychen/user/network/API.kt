@@ -11,15 +11,21 @@ import retrofit2.http.*
 
 interface API {
     @GET("/user/queryuser")
-    fun getUserById(@Query("id") id: String): Call<UserInfo>
+    suspend fun getUserInfo(@Header("token") token: String): BaseResult<UserInfo>
 
     @Multipart
     @POST("/user/upload-avatar")
-    fun uploadAvatar(@Part("description") description: RequestBody, @Part file: MultipartBody.Part ): Call<UploadAvatar>
+    suspend fun uploadAvatar(@Part("description") description: RequestBody, @Part file: MultipartBody.Part ): BaseResult<UploadAvatar>
 
     @POST("/user/update-user")
     fun updateUserInfo(@Body user: RequestBody): Call<UpdateUser>
 
-    @GET("/user/query-name")
-    fun verifyName(@Query("username") name:String):Call<BaseResult<Any>>
+    @PUT("/user/update-nickname")
+    suspend fun updateName(@Header("token") token: String,
+                   @Query("nickname") nickname:String,):BaseResult<Any>
+
+    @PUT("/user/update-avatar")
+    suspend fun updateAvatar(@Header("token") token: String,
+                   @Query("avatar") avatar:String,):BaseResult<Any>
+
 }

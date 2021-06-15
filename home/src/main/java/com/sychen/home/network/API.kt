@@ -1,9 +1,6 @@
 package com.sychen.home.network
 
-import com.sychen.home.network.model.InsertReview
-import com.sychen.home.network.model.Location
-import com.sychen.home.network.model.New
-import com.sychen.home.network.model.Review
+import com.sychen.home.network.model.*
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -29,4 +26,6 @@ interface API {
 
     @POST("/review/insert-review")
     fun uploadReview(@Body review:RequestBody):Call<InsertReview>
+    @GET("/banner/getBanners")
+    fun getBanner():Call<Banner>
 }

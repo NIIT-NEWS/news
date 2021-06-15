@@ -1,100 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:background="@color/white"
+        android:contentDescription="@string/update_done"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="210dp">
 
-        <FrameLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_gravity="top|center">
+            android:layout_height="match_parent"
+            app:toolbarId="@+id/toolbar"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+            app:contentScrim="#fff">
 
             <ImageView
                 android:id="@+id/new_detail_img"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/gradient" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/gradient"
+                app:layout_collapseMode="parallax" />
 
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="left|top"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_baseline_arrow_back_ios_24" />
-
-            <TextView
-                android:id="@+id/new_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="25dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@string/app_name"
-                android:textColor="@color/grey"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/new_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textColor="@color/grey"
-                android:textSize="15sp"
-                tools:text="2021-04-18" />
-
-        </FrameLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintlayout_n"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/new_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left|top"
-                android:layout_margin="10dp"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-black"
-                android:maxLines="3"
-                android:text="@string/title"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toTopOf="@+id/webview"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <WebView
-                android:id="@+id/webview"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:navigationIcon="@drawable/ic_left"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/new_title"
-                app:layout_constraintStart_toStartOf="@+id/new_title"
-                app:layout_constraintTop_toBottomOf="@+id/new_title" />
+                android:layout_height="?attr/actionBarSize">
 
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_overlapTop="32dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-    </LinearLayout>
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -105,5 +59,15 @@
         android:backgroundTint="#0091EA"
         android:clickable="true"
         app:srcCompat="@drawable/ic_comment_alt_edit" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/love"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom|right"
+        android:visibility="invisible"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/love" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

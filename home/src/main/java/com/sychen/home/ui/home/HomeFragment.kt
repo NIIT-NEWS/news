@@ -7,31 +7,27 @@ import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.sychen.basic.MessageEvent
-import com.sychen.basic.MessageType
-import com.sychen.basic.util.Show
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
+import com.sychen.basic.ARouterUtil
+import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.home.R
 import com.sychen.home.services.LocationService
 import kotlinx.android.synthetic.main.home_fragment.*
-import org.greenrobot.eventbus.EventBus
+import kotlinx.android.synthetic.main.search.*
 import java.util.*
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var newsListRecyclerAdapter: NewsListRecyclerAdapter
-    override fun onStart() {
-        super.onStart()
-        val msg = MessageEvent(MessageType.TypeTwo).put("onStart")
-        EventBus.getDefault().post(msg)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,25 +39,25 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-//        uploadLocation()
-        newsListRecyclerAdapter = NewsListRecyclerAdapter()
-        home_recyclerview.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            newsListRecyclerAdapter.also { adapter = it }
-        }
         viewModel.newsInfo.observe(requireActivity(), {
-            newsListRecyclerAdapter.submitList(it)
+            newsListRecyclerAdapter = NewsListRecyclerAdapter(it, viewModel.bannerInfo.value!!)
             swipe.isRefreshing = false
+            home_recyclerview.apply {
+                layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                adapter = newsListRecyclerAdapter
+            }
         })
         swipe.setOnRefreshListener {
             viewModel.getAllNews()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Show.showLog("HomeFragment:onDestroy")
+        search_text.setOnClickListener { v->
+            val makeScaleUpAnimation =
+                ActivityOptionsCompat.makeScaleUpAnimation(v, v.width, v.height, 0, 0)
+            ARouter.getInstance().build(ARouterUtil.START_SEARCH_ACTIVITY)
+                .withString("SEARCH_TEXT",edit_query.text?.toString()?.trim())
+                .withOptionsCompat(makeScaleUpAnimation)
+                .navigation()
+        }
     }
 
     private fun uploadLocation() {
@@ -97,11 +93,5 @@ class HomeFragment : Fragment() {
             },
             Context.BIND_AUTO_CREATE
         )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val msg = MessageEvent(MessageType.TypeTwo).put("onStop")
-        EventBus.getDefault().post(msg)
     }
 }

@@ -2,11 +2,11 @@ package com.sychen.basic.network
 
 import com.google.gson.annotations.SerializedName
 
-data class BaseResult<T>(
+data class BaseResult<out T>(
     @SerializedName("code")
-    val code:Int=0,
+    val code: Int,
     @SerializedName("message")
-    val message:String="",
+    val message: String,
     @SerializedName("data")
-    val `data`:T
+    val data: T
 )

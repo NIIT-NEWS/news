@@ -9,4 +9,34 @@
         android:name="com.sychen.jwxx.ui.main.JwxxFragment"
         android:label="fragment_jwxx"
         tools:layout="@layout/fragment_jwxx" />
+    <fragment
+        android:id="@+id/noticeFragment"
+        android:name="com.sychen.jwxx.ui.publicnotice.NoticeFragment"
+        android:label="notice_fragment"
+        tools:layout="@layout/notice_fragment" >
+        <action
+            android:id="@+id/action_noticeFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/contentFragment"
+        android:name="com.sychen.jwxx.ui.content.ContentFragment"
+        android:label="fragment_content"
+        tools:layout="@layout/fragment_content" >
+        <action
+            android:id="@+id/action_contentFragment_to_downloadFragment"
+            app:destination="@id/downloadFragment" />
+        <action
+            android:id="@+id/action_contentFragment_to_noticeFragment"
+            app:destination="@id/noticeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.sychen.jwxx.ui.download.DownloadFragment"
+        android:label="download_fragment"
+        tools:layout="@layout/download_fragment" >
+        <action
+            android:id="@+id/action_downloadFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+    </fragment>
 </navigation>

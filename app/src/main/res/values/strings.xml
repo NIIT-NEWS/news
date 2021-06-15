@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">new</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_user">User</string>
+    <string name="app_name">校园资讯</string>
+    <string name="title_home">主页</string>
+    <string name="title_dashboard">教务</string>
+    <string name="title_user">用户</string>
 </resources>

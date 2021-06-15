@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sychen.basic.util.Show
 import com.sychen.home.network.HomeRetrofitUtil
+import com.sychen.home.network.model.Banner
 import com.sychen.home.network.model.Location
 import com.sychen.home.network.model.New
 import retrofit2.Call
@@ -15,9 +16,12 @@ import retrofit2.Response
 class HomeViewModel : ViewModel() {
     private var _newsInfo = MutableLiveData<List<New.Data>>()
     val newsInfo: LiveData<List<New.Data>> = _newsInfo
+    private var _bannerInfo = MutableLiveData<List<Banner.Data>>()
+    val bannerInfo: LiveData<List<Banner.Data>> = _bannerInfo
 
     init {
         getAllNews()
+        getBanner()
     }
 
     fun getAllNews() {
@@ -61,6 +65,32 @@ class HomeViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<Location>, t: Throwable) {
                     Show.showLog("定位上传请求失败！${t.message}")
+                }
+            })
+    }
+
+    fun getBanner() {
+        HomeRetrofitUtil.api.getBanner()
+            .enqueue(object : Callback<Banner> {
+                override fun onResponse(
+                    call: Call<Banner>,
+                    response: Response<Banner>
+                ) {
+                    if (response.isSuccessful) {
+                        when (response.body()!!.code) {
+                            200 -> {
+                                Show.showLog("轮播图请求成功！")
+                                _bannerInfo.postValue(response.body()!!.data)
+                            }
+                            else -> {
+                                Show.showLog("轮播图请求失败！")
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<Banner>, t: Throwable) {
+                    Show.showLog("轮播图请求失败！${t.message}")
                 }
             })
     }

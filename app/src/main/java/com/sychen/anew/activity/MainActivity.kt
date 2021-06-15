@@ -1,15 +1,22 @@
 package com.sychen.anew.activity
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.sychen.anew.R
+import com.sychen.anew.service.NetworkService
 import com.sychen.anew.ui.dashboard.DashboardFragment
 import com.sychen.anew.ui.home.HomeFragment
 import com.sychen.anew.ui.user.UserFragment
@@ -17,6 +24,8 @@ import com.sychen.basic.ARouterUtil
 import com.sychen.basic.MessageEvent
 import com.sychen.basic.MessageType
 import com.sychen.basic.activity.BaseActivity
+import com.sychen.basic.util.DialogUtil
+import com.sychen.basic.util.PermissionUtil
 import com.sychen.basic.util.SharedPreferencesUtil
 import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesLoad
 import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesSave
@@ -26,28 +35,28 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+
 @Route(path = ARouterUtil.START_MAIN_ACTIVITY)
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        EventBus.getDefault().register(this)
         initViewPager2()
         initBottomNav()
         initHomeCard()
+        PermissionUtil.runtimePermission("WRITE_EXTERNAL_STORAGE")
+        PermissionUtil.runtimePermission("READ_EXTERNAL_STORAGE")
+        PermissionUtil.runtimePermission("RECEIVE_BOOT_COMPLETED")
     }
 
+
+
     private fun initHomeCard() {
-        if (sharedPreferencesLoad<Int>("CARD_RADIUS")==null){
+        if (sharedPreferencesLoad<Int>("CARD_RADIUS") == null) {
             sharedPreferencesSave("CARD_RADIUS", 40)
             sharedPreferencesSave("CARD_ELEVATION", 20)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
     /**
@@ -90,14 +99,14 @@ class MainActivity : BaseActivity() {
 
     //接收消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MessageEvent) {
+    override fun onMessageEvent(event: MessageEvent) {
         when (event.type) {
             MessageType.TypeTwo -> {
-                when(event.getString()){
-                    "onStart"->{
+                when (event.getString()) {
+                    "onStart" -> {
                         nav_view.visibility = View.VISIBLE
                     }
-                    "onStop"->{
+                    "onStop" -> {
                         nav_view.visibility = View.GONE
                     }
                 }

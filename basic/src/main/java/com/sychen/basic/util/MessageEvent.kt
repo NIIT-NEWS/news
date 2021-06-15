@@ -66,7 +66,6 @@ data class MessageEvent(var type: MessageType) {
         return this
     }
 
-    //===============================================================
 
     fun getInt(): Int {
         return bundle.getInt(KEY_INT)

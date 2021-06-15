@@ -8,6 +8,7 @@ import com.sychen.login.database.repository.UserRepository
 import com.sychen.login.database.database.UserDatabase
 import com.sychen.login.database.model.User
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application):AndroidViewModel(application) {
@@ -21,13 +22,13 @@ class UserViewModel(application: Application):AndroidViewModel(application) {
     }
 
     fun insertUser(user: User){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch (Dispatchers.IO) {
             repository.insertUser(user)
         }
     }
 
     fun deleteUserById(id:Long){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.async(Dispatchers.IO) {
             repository.deleteUserById(id)
         }
     }

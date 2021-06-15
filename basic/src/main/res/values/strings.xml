@@ -17,4 +17,6 @@
     <string name="confirm_photo">确定</string>
     <string name="please_input_new_name">请输入新的用户名</string>
     <string name="username_alread_exit">用户名已经存在</string>
+    <string name="dialog_progress">正在加载</string>
+    <string name="please_wait">请稍后</string>
 </resources>

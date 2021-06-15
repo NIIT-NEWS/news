@@ -3,8 +3,8 @@ if (rootProject.ext.android.IS_APPLICATION) {
 } else {
     apply plugin: 'com.android.library'
 }
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion rootProject.ext.android.COMPILESDKVERSION
@@ -64,11 +64,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    //room
     def room_version = "2.2.6"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
-    kapt  'com.alibaba:arouter-compiler:1.2.2'
+    kapt  'com.alibaba:arouter-compiler:1.5.1'
 }

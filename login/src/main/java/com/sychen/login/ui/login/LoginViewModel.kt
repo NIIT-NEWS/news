@@ -1,45 +1,38 @@
 package com.sychen.login.ui.login
 
+import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.MyApplication.Companion.showToastShort
+import com.sychen.basic.network.BaseResult
+import com.sychen.basic.util.DialogUtil
 import com.sychen.basic.util.Show
 import com.sychen.login.network.LoginRetrofitUtil
-import com.sychen.login.network.model.Login
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.sychen.login.network.model.UserInfo
+import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-    private var _flag = MutableLiveData<Boolean>()
-    val flag: LiveData<Boolean> = _flag
 
-    private var _loginInfo = MutableLiveData<Login>()
-    val loginInfo: LiveData<Login> = _loginInfo
+    private val _loginInfo by lazy {
+        MutableLiveData<BaseResult<UserInfo>>()
+    }
 
-    fun login(account: String, password: String){
-        LoginRetrofitUtil.api.login(account, password)
-            .enqueue(object : Callback<Login> {
-                override fun onResponse(
-                    call: Call<Login>,
-                    response: Response<Login>
-                ) {
-                    if (response.isSuccessful) {
-                        if (response.body()!!.code == 200) {
-                            Show.showLog("用户登录网络请求成功！${response.body()!!.code}")
-                            _loginInfo.postValue(response.body()!!)
-                            _flag.postValue(true)
-                        } else {
-                            Show.showLog("用户登录失败")
-                            _flag.postValue(false)
-                        }
-                    }
+    fun login(account: String, password: String): LiveData<BaseResult<UserInfo>> {
+        viewModelScope.launch {
+            try {
+                val login = LoginRetrofitUtil.api.login(account, password)
+                _loginInfo.postValue(login)
+            } catch (e: Exception) {
+                if ("HTTP 404 Not Found" == e.message) {
+                    Log.e(TAG, "login: ${e.message}")
                 }
+            }
 
-                override fun onFailure(call: Call<Login>, t: Throwable) {
-                    Show.showLog("用户登录网络请求失败！${t.message}")
-                    _flag.postValue(false)
-                }
-            })
+        }
+        return _loginInfo
     }
 }

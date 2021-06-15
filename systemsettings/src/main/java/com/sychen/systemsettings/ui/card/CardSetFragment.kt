@@ -3,15 +3,12 @@ package com.sychen.systemsettings.ui.card
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
-import com.sychen.basic.MyApplication.Companion.TAG
-import com.sychen.basic.MyApplication.Companion.showToastShort
 import com.sychen.basic.util.SharedPreferencesUtil
 import com.sychen.systemsettings.R
 import kotlinx.android.synthetic.main.alert_dialog.*
@@ -79,7 +76,7 @@ class CardSetFragment : Fragment() {
                 setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
             show()
-            alert_confirm.setOnClickListener {
+            progress_dialog_confirm.setOnClickListener {
                 dismiss()
                 Navigation.findNavController(requireView())
                     .navigate(R.id.action_cardSetFragment_to_mainFragment)

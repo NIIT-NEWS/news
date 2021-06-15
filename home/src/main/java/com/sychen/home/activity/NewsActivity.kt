@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.sychen.basic.MessageEvent
 import com.sychen.basic.MessageType
 import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.activity.BaseActivity
 import com.sychen.basic.util.StatusBarHeight
 import com.sychen.home.R
 import com.sychen.home.network.model.New
@@ -21,7 +22,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class NewsActivity : AppCompatActivity() {
+class NewsActivity : BaseActivity() {
     private lateinit var news: New.Data
 
     override fun onCreate(savedInstanceState: Bundle?) {

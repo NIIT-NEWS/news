@@ -10,7 +10,7 @@ import com.sychen.basic.MyApplication.Companion._context
 import com.sychen.basic.R
 import kotlin.collections.ArrayList
 
-@SuppressLint("StaticFieldLeak")
+@SuppressLint("StaticFieldLeak", "CommitPrefEdits")
 object  SharedPreferencesUtil {
     private var mContext: Context = _context!!
     var shp: SharedPreferences
@@ -25,7 +25,7 @@ object  SharedPreferencesUtil {
     /**
      * 写入
      */
-    fun saveArrayList(key: String, value: ArrayList<String>) {
+    fun saveJson(key: String, value: ArrayList<String>) {
         editor.putString(key, Gson().toJson(value))
             .apply()
     }
@@ -37,14 +37,14 @@ object  SharedPreferencesUtil {
         Float::class -> editor.putFloat(key,value.toString().toFloat()).apply()
         Long::class -> editor.putLong(key,value.toString().toLong()).apply()
         ArrayList<String>()::class -> editor.putString(key, Gson().toJson(value)).apply()
-        else -> throw IllegalArgumentException("Type not supported: ${T::class.java}")
+        else -> throw IllegalArgumentException("不支持的类型: ${T::class.java}")
     }
 
     /**
      * 读取
      * @return
      */
-    fun loadArrayList(key: String): List<Long> {
+    fun loadJson(key: String): List<Long> {
         val data = shp.getString(key, "")
         return Gson().fromJson(data, object : TypeToken<List<Long>>() {}.type)
     }
@@ -55,6 +55,6 @@ object  SharedPreferencesUtil {
         Boolean::class -> shp.getBoolean(key,false)
         Float::class -> shp.getFloat(key,0f)
         Long::class -> shp.getLong(key,0L)
-        else -> throw IllegalArgumentException("Type not supported: ${T::class.java}")
+        else -> throw IllegalArgumentException("不支持的类型: ${T::class.java}")
     }
 }

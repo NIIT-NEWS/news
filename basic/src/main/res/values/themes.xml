@@ -25,7 +25,7 @@
     </style>
     <color name="white">#fff</color>
     <color name="black">#000</color>
-    <color name="gray">#A2A2A2</color>
+    <color name="gray">#DDDDDD</color>
     <color name="red">#D50000</color>
     <color name="blue">#36AEF4</color>
 </resources>

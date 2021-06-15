@@ -1,49 +1,48 @@
 package com.sychen.login.ui.welcome
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sychen.basic.util.Show
+import androidx.lifecycle.viewModelScope
+import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.util.dataStoreRead
 import com.sychen.login.network.LoginRetrofitUtil
 import com.sychen.login.network.model.VerifyToken
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
+
+enum class TokenStatus {
+    Success,
+    Expired,
+    Failed
+}
 
 class GreetViewModel : ViewModel() {
+    val status by lazy {
+        MutableLiveData<TokenStatus>()
+    }
 
-    private var _flag = MutableLiveData<Boolean>()
-    val flag: LiveData<Boolean> = _flag
-
-    private var _tokenInfo = MutableLiveData<VerifyToken>()
-    val tokenInfo: LiveData<VerifyToken> = _tokenInfo
-
-    fun verifyToken(token: String) {
-        LoginRetrofitUtil.api.verifyToken(token)
-            .enqueue(object : Callback<VerifyToken> {
-                override fun onResponse(
-                    call: Call<VerifyToken>,
-                    response: Response<VerifyToken>
-                ) {
-                    if (response.isSuccessful) {
-                        when(response.body()!!.code){
-                            200->{
-                                Show.showLog("验证token成功！${response.body()!!}")
-                                _tokenInfo.postValue(response.body()!!)
-                                _flag.postValue(true)
-                            }
-                            201->{
-                                Show.showLog("验证token成功！==== token 过期${response.body()!!}")
-                                _flag.postValue(false)
-                            }
-                        }
+    fun verifyToken() {
+        viewModelScope.launch {
+            val token = dataStoreRead<String>("TOKEN")
+            try {
+                val verifyToken = LoginRetrofitUtil.api.verifyToken(token)
+                when (verifyToken.code) {
+                    200 -> {
+                        status.postValue(TokenStatus.Success)
+                    }
+                    201 -> {
+                        status.postValue(TokenStatus.Expired)
+                    }
+                    else -> {
+                        status.postValue(TokenStatus.Failed)
                     }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "verifyToken: $e" )
+                status.postValue(TokenStatus.Failed)
+            }
 
-                override fun onFailure(call: Call<VerifyToken>, t: Throwable) {
-                    Show.showLog("验证token失败！${t.message}")
-                    _flag.postValue(false)
-                }
-            })
+        }
     }
 }

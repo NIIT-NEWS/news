@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.*
 import android.webkit.JavascriptInterface
@@ -17,9 +19,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.sychen.basic.ARouterUtil
 import com.sychen.basic.MessageEvent
 import com.sychen.basic.MessageType
 import com.sychen.basic.MyApplication.Companion.TAG
@@ -48,7 +52,6 @@ class NewDetailsFragment : Fragment() {
     private lateinit var viewModel: NewDetailsViewModel
     private lateinit var news: New.Data
     private lateinit var mInputEditDialog: Dialog
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,16 +73,13 @@ class NewDetailsFragment : Fragment() {
 
     private fun initView() {
         initInputMsgDialog()
-        new_author.text = news.author
+//        new_author.text = news.author
         new_detail_img.load(news.newTitleImgUrl)
-        new_title.text = news.newTitle
-        new_date.text = news.date
-        //返回到主页面
-        back.setOnClickListener {
-            //使用eventbus发送广播启动activity
-            val msg = MessageEvent(MessageType.TypeOne).put("startHomeActivity")
-            EventBus.getDefault().post(msg)
-            requireActivity().finish()
+        toolbar.apply {
+            title = news.newTitle
+            setNavigationOnClickListener {
+                ARouter.getInstance().build(ARouterUtil.START_MAIN_ACTIVITY).navigation()
+            }
         }
         setWebView()
         fab.apply {
@@ -88,6 +88,20 @@ class NewDetailsFragment : Fragment() {
             }
             setOnFocusChangeListener { v, hasFocus ->
                 mInputEditDialog.show()
+                val vibrator = (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator)
+                val patter = longArrayOf(1000, 1000, 2000, 50)
+                val amplitudes = intArrayOf(120, 130, 150, 170)
+                vibrator.vibrate(
+                    VibrationEffect.createWaveform(
+                        patter,
+                        amplitudes,
+                        1
+                    )
+                )
+            }
+            setOnLongClickListener {
+                love.visibility = View.VISIBLE
+                return@setOnLongClickListener true
             }
         }
     }

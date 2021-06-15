@@ -73,7 +73,6 @@ class PreviewPhotoFragment : Fragment() {
                 val file = File(photoUri)
                 Log.e(TAG, "onActivityCreated: $file" )
                 previewPhotoViewModel.uploadAvatar(file)
-                userGson()
                 saveUserInfo()
                 Navigation.findNavController(requireView())
                     .navigate(R.id.action_previewPhotoFragment_to_userSetFragment)
@@ -82,34 +81,12 @@ class PreviewPhotoFragment : Fragment() {
     }
 
     /**
-     * 将用户的信息转换成json数据
-     * 通过view model发送到服务器
-     */
-    private fun userGson() {
-        previewPhotoViewModel.userAvatarUrl.observe(requireActivity(), {
-            Log.e(TAG, "userGson: $it")
-            val gson = GsonBuilder().create()
-            val updateUser = User()
-            with(updateUser) {
-                userid = userInfo.data.id
-                username = userInfo.data.username
-                password = userInfo.data.password
-                avatar = it.toString()
-                role = userInfo.data.role
-            }
-            val user = gson.toJson(updateUser)
-            previewPhotoViewModel.updateUserInfo(user)
-        })
-    }
-
-    /**
      * 存储用户信息
      * 在此处主要更新头像信息
      */
     private fun saveUserInfo() {
         lifecycleScope.launch {
-            userViewModel.getUserInfo(dataStoreRead("USER_ID"))
-            userViewModel.userInfo.observe(requireActivity(), { userInfo ->
+            userViewModel.getUserInfo().observe(requireActivity(), { userInfo ->
                 lifecycleScope.launch {
                     dataStoreSave<String>("USER_INFO", Gson().toJson(userInfo))
                 }
