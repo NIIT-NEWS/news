@@ -15,19 +15,27 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sychen.basic.ARouterUtil
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.home.R
 import com.sychen.home.services.LocationService
+import com.sychen.home.ui.home.fragment.CollegeNewsFragment
+import com.sychen.home.ui.home.fragment.KyFragment
+import com.sychen.home.ui.home.fragment.NewsPushFragment
+import com.sychen.home.ui.home.fragment.NiitNewsFragment
 import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.search.*
 import java.util.*
 
 class HomeFragment : Fragment() {
 
-    private lateinit var viewModel: HomeViewModel
-    private lateinit var newsListRecyclerAdapter: NewsListRecyclerAdapter
+    private val viewModel by lazy {
+        ViewModelProvider(this).get(HomeViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,23 +46,31 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        viewModel.newsInfo.observe(requireActivity(), {
-            newsListRecyclerAdapter = NewsListRecyclerAdapter(it, viewModel.bannerInfo.value!!)
-            swipe.isRefreshing = false
-            home_recyclerview.apply {
-                layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-                adapter = newsListRecyclerAdapter
+        home_viewpager.apply {
+            adapter = object : FragmentStateAdapter(requireActivity()) {
+                override fun getItemCount() = 4
+                override fun createFragment(position: Int) = when (position) {
+                    1 -> NiitNewsFragment()
+                    2 -> NewsPushFragment()
+                    3 -> CollegeNewsFragment()
+                    else -> KyFragment()
+                }
             }
-        })
-        swipe.setOnRefreshListener {
-            viewModel.getAllNews()
+            setCurrentItem(1,false) //false 代表平滑滚动
         }
-        search_text.setOnClickListener { v->
+        TabLayoutMediator(home_tablayout,home_viewpager){ tab: TabLayout.Tab, i:Int->
+            tab.text=when(i){
+                1->"学校要闻"
+                2->"新闻速递"
+                3->"院部风采"
+                else->"抗议专栏"
+            }
+        }.attach()
+        search_text.setOnClickListener { v ->
             val makeScaleUpAnimation =
                 ActivityOptionsCompat.makeScaleUpAnimation(v, v.width, v.height, 0, 0)
             ARouter.getInstance().build(ARouterUtil.START_SEARCH_ACTIVITY)
-                .withString("SEARCH_TEXT",edit_query.text?.toString()?.trim())
+                .withString("SEARCH_TEXT", edit_query.text?.toString()?.trim())
                 .withOptionsCompat(makeScaleUpAnimation)
                 .navigation()
         }

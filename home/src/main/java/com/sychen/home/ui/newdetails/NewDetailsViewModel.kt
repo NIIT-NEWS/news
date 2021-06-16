@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.home.network.HomeRetrofitUtil
 import com.sychen.home.network.model.InsertReview
-import com.sychen.home.network.model.New
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import retrofit2.Call

@@ -1,54 +1,55 @@
 package com.sychen.home.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.Show
 import com.sychen.home.network.HomeRetrofitUtil
 import com.sychen.home.network.model.Banner
 import com.sychen.home.network.model.Location
-import com.sychen.home.network.model.New
+import com.sychen.home.network.model.NiitNews
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
 class HomeViewModel : ViewModel() {
-    private var _newsInfo = MutableLiveData<List<New.Data>>()
-    val newsInfo: LiveData<List<New.Data>> = _newsInfo
+    private val _newsInfo by lazy {
+        MutableLiveData<NiitNews>()
+    }
     private var _bannerInfo = MutableLiveData<List<Banner.Data>>()
     val bannerInfo: LiveData<List<Banner.Data>> = _bannerInfo
 
     init {
-        getAllNews()
         getBanner()
     }
 
-    fun getAllNews() {
-        HomeRetrofitUtil.api.getAllNewsC()
-            .enqueue(object : Callback<New> {
-                override fun onResponse(
-                    call: Call<New>,
-                    response: Response<New>
-                ) {
-                    if (response.isSuccessful) {
-                        when(response.body()!!.code){
-                            200->{
-                                Show.showLog("新闻详情网络请求成功！${response.body()!!.code}")
-                                _newsInfo.postValue(response.body()!!.data)
-                            }
-                            201->{
-                                Show.showLog("新闻详情网络请求失败！${response.body()!!.code}")
-                            }
-                        }
+    fun getPagingData(type: Int): Flow<PagingData<NiitNews.News>> {
+        return Repository.getPagingData(type).cachedIn(viewModelScope)
+    }
 
+    fun getAllNews(type: Int, pageNum: Int, pageSize: Int): LiveData<NiitNews> {
+        viewModelScope.launch {
+            try {
+                val newsPage = HomeRetrofitUtil.api.getNewsPage(type, pageNum, pageSize)
+                when (newsPage.code) {
+                    200 -> {
+                        _newsInfo.postValue(newsPage.data)
                     }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "getAllNews: $e")
+            }
 
-                override fun onFailure(call: Call<New>, t: Throwable) {
-                    Show.showLog("新闻详情网络请求失败！${t.message}")
-                }
-            })
+        }
+        return _newsInfo
     }
 
     fun uploadLocation(lon: String, lat: String, uid: String, time: String) {

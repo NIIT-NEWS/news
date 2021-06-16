@@ -29,7 +29,7 @@ import com.sychen.basic.MessageType
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.home.R
-import com.sychen.home.network.model.New
+import com.sychen.home.network.model.NiitNews
 import kotlinx.android.synthetic.main.dialog_input_edit.*
 import kotlinx.android.synthetic.main.new_details_fragment.*
 import kotlinx.coroutines.launch
@@ -39,18 +39,17 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 class NewDetailsFragment : Fragment() {
 
-    companion object
 
-    fun getInstance(new: New.Data): Fragment {
+    fun getInstance(new: NiitNews.News): Fragment {
         val newDetailsFragment = NewDetailsFragment()
         val bundle = Bundle()
-        bundle.putString("NEW_INFO", Gson().toJson(new, New.Data::class.java))
+        bundle.putString("NEW_INFO", Gson().toJson(new, NiitNews.News::class.java))
         newDetailsFragment.arguments = bundle
         return newDetailsFragment
     }
 
     private lateinit var viewModel: NewDetailsViewModel
-    private lateinit var news: New.Data
+    private lateinit var news: NiitNews.News
     private lateinit var mInputEditDialog: Dialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +62,7 @@ class NewDetailsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(NewDetailsViewModel::class.java)
         try {
-            news = Gson().fromJson(arguments?.getString("NEW_INFO"), New.Data::class.java)
+            news = Gson().fromJson(arguments?.getString("NEW_INFO"), NiitNews.News::class.java)
         } catch (e: Exception) {
             Log.e(TAG, "NewDetailsFragment-onActivityCreated: ${e.message}")
         }

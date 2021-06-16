@@ -133,23 +133,7 @@ class UserSetFragment : Fragment() {
             }
             show()
             tv_take_photo.setOnClickListener {
-                outputImage = File(_context!!.externalCacheDir, "output_image.jpg")
-                if (outputImage.exists()) {
-                    outputImage.delete()
-                }
-                outputImage.createNewFile()
-                imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    FileProvider.getUriForFile(
-                        _context!!,
-                        "com.sychen.user.fileprovider",
-                        outputImage
-                    )
-                } else {
-                    Uri.fromFile(outputImage)
-                }
-                val intent = Intent("android.media.action.IMAGE_CAPTURE")
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                startActivityForResult(intent, takePhoto)
+                Navigation.findNavController(requireView()).navigate(R.id.action_userSetFragment_to_cameraxFragment)
                 this.dismiss()
             }
             tv_take_pic.setOnClickListener {
@@ -180,6 +164,7 @@ class UserSetFragment : Fragment() {
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     data.data?.let { uri ->
+                        Log.e(TAG, "onActivityResult: uri$uri", )
                         lifecycleScope.launch {
                             //从相册选取图片时获得的uri,保存到本地
                             dataStoreSave("PHOTO_URI", uri.toString())
@@ -187,7 +172,8 @@ class UserSetFragment : Fragment() {
                         val realPathFromUri =
                             getRealPath.getRealPathFromUri(requireContext(), uri)
                         val file = File(realPathFromUri)
-                        previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(),{
+                        Log.e(TAG, "this is fromAlbum: $file",)
+                        previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(), {
                             viewModel.updateAvatar(it.url)
                         })
                         user_set_avatar.apply {
@@ -199,30 +185,8 @@ class UserSetFragment : Fragment() {
                                 error(R.drawable.ic_baseline_error_24)
                             }
                         }
-                        DialogUtil.alertDialog(requireContext(),"更换成功！")
+                        DialogUtil.alertDialog(requireContext(), "更换成功！")
                     }
-                }
-            }
-            takePhoto -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    val bitmap =
-                        BitmapFactory.decodeStream(
-                            _context!!.contentResolver.openInputStream(
-                                imageUri
-                            )
-                        )
-                    try {
-                        val realPathFromUri =
-                            getRealPath.getRealPathFromUri(requireContext(), imageUri)
-                        val file = File(realPathFromUri)
-                        previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(),{
-                            viewModel.updateAvatar(it.url)
-                        })
-                    } catch (e: Exception) {
-                        Log.e(TAG, "onActivityResult: $e")
-                    }
-                    DialogUtil.alertDialog(requireContext(),"更换成功！")
-                    user_set_avatar.setImageBitmap(rotateIfRequired(bitmap))
                 }
             }
         }

@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -116,12 +117,10 @@ class CameraxFragment : Fragment() {
                  */
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = Uri.fromFile(photoFile)
-                    val msg = "Photo capture succeeded: $savedUri"
-                    Show.showLog(msg)
                     Bundle().apply {
-                        putString("PHOTO_URI",savedUri.toString())
-//                        Navigation.findNavController(requireView())
-//                            .navigate(R.id.action_cameraxFragment_to_previewPhotoFragment,this)
+                        putString("PHOTO_URI", photoFile.toString())
+                        Navigation.findNavController(requireView())
+                            .navigate(R.id.action_cameraxFragment_to_previewPhotoFragment, this)
                     }
                 }
             })
@@ -138,7 +137,7 @@ class CameraxFragment : Fragment() {
             val preview = Preview.Builder()
                 .build()
                 .also {
-//                    it.setSurfaceProvider(viewFinder.createSurfaceProvider())
+                    it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
 
             imageCapture = ImageCapture.Builder()

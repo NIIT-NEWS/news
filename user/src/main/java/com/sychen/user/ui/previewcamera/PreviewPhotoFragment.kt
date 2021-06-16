@@ -19,10 +19,12 @@ import com.google.gson.GsonBuilder
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.basic.util.dataStoreSave
+import com.sychen.basic.util.getRealPath
 import com.sychen.user.R
 import com.sychen.user.network.model.User
 import com.sychen.user.network.model.UserInfo
 import com.sychen.user.ui.main.UserViewModel
+import com.sychen.user.ui.userset.UserSetViewModel
 import kotlinx.android.synthetic.main.preview_photo_fragment.*
 import kotlinx.coroutines.launch
 import java.io.File
@@ -32,7 +34,9 @@ class PreviewPhotoFragment : Fragment() {
 
     private lateinit var previewPhotoViewModel: PreviewPhotoViewModel
     private lateinit var userViewModel: UserViewModel
-
+    private val viewModel by lazy {
+        UserSetViewModel()
+    }
     private lateinit var userInfo: UserInfo
 
     override fun onCreateView(
@@ -70,49 +74,13 @@ class PreviewPhotoFragment : Fragment() {
         //2、更新用户信息
         ph_confrim_btn.apply {
             setOnClickListener {
-                val file = File(photoUri)
-                Log.e(TAG, "onActivityCreated: $file" )
-                previewPhotoViewModel.uploadAvatar(file)
-                saveUserInfo()
+//                val file = File()
+//                previewPhotoViewModel.uploadAvatar().observe(requireActivity(),{
+//                    viewModel.updateAvatar(it.url)
+//                })
                 Navigation.findNavController(requireView())
                     .navigate(R.id.action_previewPhotoFragment_to_userSetFragment)
             }
         }
     }
-
-    /**
-     * 存储用户信息
-     * 在此处主要更新头像信息
-     */
-    private fun saveUserInfo() {
-        lifecycleScope.launch {
-            userViewModel.getUserInfo().observe(requireActivity(), { userInfo ->
-                lifecycleScope.launch {
-                    dataStoreSave<String>("USER_INFO", Gson().toJson(userInfo))
-                }
-            })
-        }
-    }
-
-    /**
-     * 把content uri转为 文件路径
-     *
-     * @param contentUri      要转换的content uri
-     * @param contentResolver 解析器
-     * @return
-     */
-    fun getFilePathFromContentUri(
-        contentUri: Uri,
-        contentResolver: ContentResolver
-    ): String? {
-        val filePath: String
-        val filePathColumn = arrayOf(MediaStore.MediaColumns.DATA)
-        val cursor: Cursor = contentResolver.query(contentUri, filePathColumn, null, null, null)!!
-        cursor.moveToFirst()
-        val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
-        filePath = cursor.getString(columnIndex)
-        cursor.close()
-        return filePath
-    }
-
 }

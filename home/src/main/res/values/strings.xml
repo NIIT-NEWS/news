@@ -4,4 +4,6 @@
     <string name="title">TITLE</string>
     <string name="review">评论</string>
     <string name="Search">搜索</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

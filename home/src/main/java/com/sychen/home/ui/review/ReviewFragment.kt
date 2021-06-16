@@ -11,22 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.home.R
-import com.sychen.home.network.model.New
-import com.sychen.home.ui.newdetails.NewDetailsFragment
+import com.sychen.home.network.model.NiitNews
 import kotlinx.android.synthetic.main.review_fragment.*
 
 class ReviewFragment : Fragment() {
 
-    companion object fun getInstance(new: New.Data): Fragment {
+    companion object fun getInstance(new: NiitNews.News): Fragment {
         val reviewFragment = ReviewFragment()
         val bundle = Bundle()
-        bundle.putString("NEW_INFO", Gson().toJson(new, New.Data::class.java))
+        bundle.putString("NEW_INFO", Gson().toJson(new, NiitNews.News::class.java))
         reviewFragment.arguments = bundle
         return reviewFragment
     }
 
     private lateinit var viewModel: ReviewViewModel
-    private lateinit var news: New.Data
+    private lateinit var news: NiitNews.News
     private lateinit var reviewListAdapter: ReviewListAdapter
 
     override fun onCreateView(
@@ -40,7 +39,7 @@ class ReviewFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ReviewViewModel::class.java)
         try {
-            news = Gson().fromJson(arguments?.getString("NEW_INFO"), New.Data::class.java)
+            news = Gson().fromJson(arguments?.getString("NEW_INFO"), NiitNews.News::class.java)
         } catch (e: NullPointerException) {
             Log.e(TAG, "ReviewFragment-onActivityCreated: ${e.message}")
         }

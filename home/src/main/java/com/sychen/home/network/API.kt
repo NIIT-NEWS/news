@@ -1,5 +1,6 @@
 package com.sychen.home.network
 
+import com.sychen.basic.network.BaseResult
 import com.sychen.home.network.model.*
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -11,7 +12,11 @@ import retrofit2.http.Query
 interface API {
 
     @GET("/news/getallnews")
-    fun getAllNewsC(): Call<New>
+    suspend fun getNewsPage(
+        @Query("type") type:Int,
+        @Query("pageNum") pageNum:Int,
+        @Query("pageSize") pageSize:Int
+    ): BaseResult<NiitNews>
 
     @POST("/location/uploadlocation")
     fun uploadLocation(
