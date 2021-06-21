@@ -131,7 +131,8 @@ class UserFragment : Fragment() {
         favorLayout.setOnClickListener { v->
             val makeScaleUpAnimation =
                 ActivityOptionsCompat.makeScaleUpAnimation(v, v.width, v.height, 0, 0)
-            ARouter.getInstance().build(ARouterUtil.START_COLLECT_ACTIVITY)
+            ARouter.getInstance()
+                .build(ARouterUtil.START_COLLECT_ACTIVITY)
                 .withOptionsCompat(makeScaleUpAnimation)
                 .navigation()
         }

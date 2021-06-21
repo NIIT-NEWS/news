@@ -1,13 +1,12 @@
 package com.sychen.collect.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sychen.basic.ARouterUtil;
 import com.sychen.basic.activity.BaseActivity;
 import com.sychen.collect.R;
+
+
 @Route(path = ARouterUtil.START_COLLECT_ACTIVITY)
 public class CollectActivity extends BaseActivity {
 
