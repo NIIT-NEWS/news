@@ -13,37 +13,7 @@ android {
         versionCode rootProject.ext.android.VERSIONCODE
         versionName rootProject.ext.android.VERSIONNAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        ndk {
-            //选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
-            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
-        }
-        manifestPlaceholders = [
-                JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "0b6c961389687244537db80b", //JPush 上注册的包名对应的 Appkey.
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
-                //xiaomi_config_start
-                XIAOMI_APPID  : "MI-小米的APPID",
-                XIAOMI_APPKEY : "MI-小米的APPKEY",
-                //xiaomi_config_end
-                //oppo_config_start
-                OPPO_APPKEY   : "OP-oppo的APPKEY",
-                OPPO_APPID    : "OP-oppo的APPID",
-                OPPO_APPSECRET: "OP-oppo的APPSECRET",
-                //oppo_config_end
-                //vivo_config_start
-                VIVO_APPKEY   : "vivo的APPKEY",
-                VIVO_APPID    : "vivo的APPID",
-                //vivo_config_end
-
-                //jshare_config_start
-                JSHARE_PKGNAME: applicationId,
-                TENCENT_APPID : "腾讯的appid",//腾讯开放平台注册应用得到的appId
-                FACEBOOK_APPID: "facebook的appid",//facebook注册应用得到的appId
-                //jshare_config_end
-        ]
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -80,7 +50,5 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    //bottom-navigation
-    implementation 'com.etebarian:meow-bottom-navigation:1.3.1'
-    kapt  'com.alibaba:arouter-compiler:1.2.2'
+    kapt  'com.alibaba:arouter-compiler:1.5.2'
 }

@@ -67,5 +67,5 @@ dependencies {
     def room_version = "2.2.6"
     kapt "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
-    kapt  'com.alibaba:arouter-compiler:1.5.1'
+    kapt  'com.alibaba:arouter-compiler:1.5.2'
 }

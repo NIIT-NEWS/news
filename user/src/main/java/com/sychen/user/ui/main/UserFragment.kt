@@ -128,6 +128,13 @@ class UserFragment : Fragment() {
                 .withOptionsCompat(makeScaleUpAnimation)
                 .navigation()
         }
+        favorLayout.setOnClickListener { v->
+            val makeScaleUpAnimation =
+                ActivityOptionsCompat.makeScaleUpAnimation(v, v.width, v.height, 0, 0)
+            ARouter.getInstance().build(ARouterUtil.START_COLLECT_ACTIVITY)
+                .withOptionsCompat(makeScaleUpAnimation)
+                .navigation()
+        }
     }
     @RequiresApi(Build.VERSION_CODES.R)
     fun readPicture(fileName:String){

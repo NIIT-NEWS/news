@@ -60,6 +60,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0' //下拉刷新
-    kapt  'com.alibaba:arouter-compiler:1.2.2'
+    kapt  'com.alibaba:arouter-compiler:1.5.2'
 
 }

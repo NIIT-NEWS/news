@@ -1,3 +1,4 @@
+include ':collect'
 include ':search'
 include ':jwxx'
 include ':systemsettings'
