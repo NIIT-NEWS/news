@@ -17,6 +17,6 @@ class SettingsActivity : BaseActivity() {
     }
 
     private fun initView() {
-        guideline2.setGuidelineBegin(StatusBarHeight.get())
+        guidelineSearch.setGuidelineBegin(StatusBarHeight.get())
     }
 }

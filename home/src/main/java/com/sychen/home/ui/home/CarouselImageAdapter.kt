@@ -7,8 +7,8 @@ import com.bumptech.glide.Glide
 import com.sychen.home.network.model.Banner
 import com.youth.banner.adapter.BannerAdapter
 
-class CarouselImageAdapter(bannerList: List<Banner.Data>) :
-    BannerAdapter<Banner.Data, CarouselImageAdapter.BannerViewHolder>(bannerList) {
+class CarouselImageAdapter(bannerList: List<Banner>) :
+    BannerAdapter<Banner, CarouselImageAdapter.BannerViewHolder>(bannerList) {
     //创建ViewHolder，可以用viewType这个字段来区分不同的ViewHolder
     override fun onCreateHolder(parent: ViewGroup, viewType: Int): BannerViewHolder? {
         val imageView = ImageView(parent.context)
@@ -21,7 +21,7 @@ class CarouselImageAdapter(bannerList: List<Banner.Data>) :
         return BannerViewHolder(imageView)
     }
 
-    override fun onBindView(holder: BannerViewHolder, banner: Banner.Data, position: Int, size: Int) {
+    override fun onBindView(holder: BannerViewHolder, banner: Banner, position: Int, size: Int) {
         //holder.imageView.setImageResource(data.imageRes);
         holder.imageView.let { Glide.with(it.context).load(banner.imgUrl).into(holder.imageView) }
         holder.itemView.setOnClickListener { v -> //点击事件

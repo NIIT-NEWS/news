@@ -4,18 +4,15 @@ import com.sychen.basic.network.BaseResult
 import com.sychen.home.network.model.*
 import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface API {
 
     @GET("/news/getallnews")
     suspend fun getNewsPage(
-        @Query("type") type:Int,
-        @Query("pageNum") pageNum:Int,
-        @Query("pageSize") pageSize:Int
+        @Query("type") type: Int,
+        @Query("pageNum") pageNum: Int,
+        @Query("pageSize") pageSize: Int
     ): BaseResult<NiitNews>
 
     @POST("/location/uploadlocation")
@@ -27,10 +24,19 @@ interface API {
     ): Call<Location>
 
     @GET("/review/query-review")
-    fun getReviewByNid(@Query("nid") nid:String): Call<Review>
+    fun getReviewByNid(@Query("nid") nid: String): Call<Review>
 
     @POST("/review/insert-review")
-    fun uploadReview(@Body review:RequestBody):Call<InsertReview>
+    fun uploadReview(@Body review: RequestBody): Call<InsertReview>
+
+
     @GET("/banner/getBanners")
-    fun getBanner():Call<Banner>
+    suspend fun getBanner(): BaseResult<List<Banner>>
+
+    @POST("/collect/news")
+    suspend fun getCollectNews(
+        @Query("newsId") nid: String,
+        @Header("token") token: String
+    ): BaseResult<String>
+
 }

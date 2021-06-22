@@ -12,6 +12,6 @@ import retrofit2.http.Query;
 
 public interface API {
     @GET("news/search-news")
-    public Call<BaseResult<List<SearchNews>>> searchNews(@Query("title") String title);
+    Call<BaseResult<List<SearchNews>>> searchNews(@Query("title") String title);
 
 }

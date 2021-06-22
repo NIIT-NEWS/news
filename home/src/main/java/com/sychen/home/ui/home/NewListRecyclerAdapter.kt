@@ -1,17 +1,27 @@
 package com.sychen.home.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Looper
+import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.google.gson.Gson
+import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.MyApplication.Companion.showToastShort
+import com.sychen.basic.util.DialogUtil
+import com.sychen.basic.util.dataStoreRead
 import com.sychen.home.R
 import com.sychen.home.activity.NewsActivity
+import com.sychen.home.network.HomeRetrofitUtil
 import com.sychen.home.network.model.Banner
 import com.sychen.home.network.model.NiitNews
 import com.youth.banner.indicator.CircleIndicator
@@ -20,8 +30,10 @@ import com.youth.banner.util.BannerUtils
 import kotlinx.android.synthetic.main.banner.view.*
 import kotlinx.android.synthetic.main.news_item.view.*
 import com.sychen.home.ui.home.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList : List<Banner.Data>) :
+class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList: List<Banner>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private val TYPE_HEADER: Int = 0
@@ -44,7 +56,8 @@ class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList 
             return ViewHolderHeader(
                 LayoutInflater.from(parent.context).inflate(R.layout.banner, parent, false)
                     .also {
-                        (it.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
+                        (it.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan =
+                            true
                     }
             )
         }
@@ -54,6 +67,7 @@ class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList 
         )
     }
 
+    @SuppressLint("ShowToast")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolderHeader) {
             holder.itemView.banner.apply {
@@ -66,7 +80,7 @@ class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList 
             }
         }
         if (holder is ViewHolder) {
-            val newsList = newsList[position-1]
+            val newsList = newsList[position - 1]
             with(holder.itemView) {
                 visit_count.text = newsList.favorCount.toString()
                 new_title.text = newsList.newTitle
@@ -75,9 +89,41 @@ class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList 
                 new_img.load(newsList.newTitleImgUrl) {
                     // 淡入淡出
                     crossfade(true)
-                    transformations(RoundedCornersTransformation(20f,20f,20f,20f))
+                    transformations(RoundedCornersTransformation(20f, 20f, 20f, 20f))
                     placeholder(R.drawable.ic_baseline_photo_24)
                     error(R.drawable.ic_baseline_broken_image_24)
+                }
+                new_collect.setOnClickListener {
+                    GlobalScope.launch {
+                        try {
+                            val collectNews = HomeRetrofitUtil.api.getCollectNews(
+                                nid = newsList.id.toString(),
+                                token = dataStoreRead("TOKEN")
+                            )
+                            when (collectNews.code) {
+                                200 -> {
+                                    Thread {
+                                        Looper.prepare()
+                                        DialogUtil.alertDialog(holder.itemView.context, "收藏成功")
+                                        Looper.loop()
+                                    }.start()
+                                }
+                                else -> {
+                                    Thread {
+                                        Looper.prepare()
+                                        DialogUtil.alertDialog(holder.itemView.context, "收藏失败")
+                                        Looper.loop()
+                                    }.start()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Thread {
+                                Looper.prepare()
+                                DialogUtil.alertDialog(holder.itemView.context, "请求失败")
+                                Looper.loop()
+                            }.start()
+                        }
+                    }
                 }
             }
             holder.itemView.setOnClickListener {

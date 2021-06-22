@@ -1,6 +1,7 @@
 package com.sychen.search.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sychen.basic.ARouterUtil;
 import com.sychen.basic.activity.BaseActivity;
+import com.sychen.basic.util.StatusBarHeight;
 import com.sychen.search.R;
 import com.sychen.search.adapter.SearchAdapter;
 import com.sychen.search.adapter.SearchDiffCallBack;
@@ -40,6 +42,8 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void initViews() {
+        Guideline guidelineSearch = findViewById(R.id.guidelineSearch);
+        guidelineSearch.setGuidelineBegin(StatusBarHeight.INSTANCE.get());
         recyclerView = findViewById(R.id.search_recyclerView);
         searchAdapter = new SearchAdapter(new SearchDiffCallBack());
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));

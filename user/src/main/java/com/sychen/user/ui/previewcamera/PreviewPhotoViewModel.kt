@@ -41,6 +41,7 @@ class PreviewPhotoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = UserRetrofitUtil.api.uploadAvatar(description, body)
+                Log.e(TAG, "uploadAvatar: $result")
                 _userAvatarUrl.postValue(result.data)
             } catch (e: Exception) {
                 Log.e(TAG, "uploadAvatar: $e", )

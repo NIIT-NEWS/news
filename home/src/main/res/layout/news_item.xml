@@ -108,4 +108,14 @@
         app:layout_constraintTop_toBottomOf="@+id/new_title"
         app:srcCompat="@drawable/ic_write" />
 
+    <ImageView
+        android:id="@+id/new_collect"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/visit_count"
+        app:layout_constraintStart_toEndOf="@+id/visit_count"
+        app:layout_constraintTop_toTopOf="@+id/visit_count"
+        app:srcCompat="@drawable/ic_heart" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

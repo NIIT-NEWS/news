@@ -24,12 +24,10 @@ class HomeViewModel : ViewModel() {
     private val _newsInfo by lazy {
         MutableLiveData<NiitNews>()
     }
-    private var _bannerInfo = MutableLiveData<List<Banner.Data>>()
-    val bannerInfo: LiveData<List<Banner.Data>> = _bannerInfo
-
-    init {
-        getBanner()
+    private val _bannerInfo by lazy {
+        MutableLiveData<List<Banner>>()
     }
+
 
     fun getPagingData(type: Int): Flow<PagingData<NiitNews.News>> {
         return Repository.getPagingData(type).cachedIn(viewModelScope)
@@ -70,29 +68,15 @@ class HomeViewModel : ViewModel() {
             })
     }
 
-    fun getBanner() {
-        HomeRetrofitUtil.api.getBanner()
-            .enqueue(object : Callback<Banner> {
-                override fun onResponse(
-                    call: Call<Banner>,
-                    response: Response<Banner>
-                ) {
-                    if (response.isSuccessful) {
-                        when (response.body()!!.code) {
-                            200 -> {
-                                Show.showLog("轮播图请求成功！")
-                                _bannerInfo.postValue(response.body()!!.data)
-                            }
-                            else -> {
-                                Show.showLog("轮播图请求失败！")
-                            }
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<Banner>, t: Throwable) {
-                    Show.showLog("轮播图请求失败！${t.message}")
-                }
-            })
+    fun getBanner():LiveData<List<Banner>> {
+        viewModelScope.launch {
+            try {
+                val banner = HomeRetrofitUtil.api.getBanner()
+                _bannerInfo.postValue(banner.data)
+            } catch (e: Exception) {
+                Log.e(TAG, "轮播图请求失败！！！" )
+            }
+        }
+        return _bannerInfo
     }
 }
