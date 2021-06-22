@@ -3,8 +3,10 @@
     package="com.sychen.search">
     <!-- 用于访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
-        <activity android:name=".activity.SearchActivity"></activity>
+        <activity android:name=".activity.SearchMainActivity"></activity>
+        <activity android:name=".activity.SearchActivity" />
     </application>
 
 </manifest>
