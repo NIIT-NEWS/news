@@ -80,4 +80,6 @@ dependencies {
     api 'com.hjq:toast:8.8'
     //paging3
     api 'androidx.paging:paging-runtime:3.0.0-beta01'
+    //
+    api 'com.blankj:utilcodex:1.30.6'
 }

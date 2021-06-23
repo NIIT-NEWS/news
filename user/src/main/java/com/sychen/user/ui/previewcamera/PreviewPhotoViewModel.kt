@@ -50,31 +50,4 @@ class PreviewPhotoViewModel : ViewModel() {
         }
         return _userAvatarUrl
     }
-
-
-    /**
-     * 更新用户信息
-     */
-    fun updateUserInfo(userInfo: String) {
-        val body: RequestBody =
-            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userInfo)
-        UserRetrofitUtil.api.updateUserInfo(body)
-            .enqueue(object : Callback<UpdateUser> {
-                override fun onResponse(
-                    call: Call<UpdateUser>,
-                    response: Response<UpdateUser>
-                ) {
-                    if (response.isSuccessful) {
-                        when(response.body()!!.code){
-                            200-> Show.showLog("用户信息更新成功！${response.body()!!.code}")
-                            else-> Show.showLog("用户信息更新失败!${response.body()!!.code}")
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<UpdateUser>, t: Throwable) {
-                    Show.showLog("用户信息更新失败！${t.message}")
-                }
-            })
-    }
 }

@@ -2,22 +2,17 @@ package com.sychen.home.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.google.gson.Gson
-import com.sychen.basic.MyApplication.Companion.TAG
-import com.sychen.basic.MyApplication.Companion.showToastShort
-import com.sychen.basic.util.DialogUtil
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.home.R
 import com.sychen.home.activity.NewsActivity
@@ -29,7 +24,6 @@ import com.youth.banner.transformer.AlphaPageTransformer
 import com.youth.banner.util.BannerUtils
 import kotlinx.android.synthetic.main.banner.view.*
 import kotlinx.android.synthetic.main.news_item.view.*
-import com.sychen.home.ui.home.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -102,26 +96,15 @@ class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList:
                             )
                             when (collectNews.code) {
                                 200 -> {
-                                    Thread {
-                                        Looper.prepare()
-                                        DialogUtil.alertDialog(holder.itemView.context, "收藏成功")
-                                        Looper.loop()
-                                    }.start()
+                                    ToastUtils.make().setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0).show("收藏成功")
+                                    VibrateUtils.vibrate(500)
                                 }
                                 else -> {
-                                    Thread {
-                                        Looper.prepare()
-                                        DialogUtil.alertDialog(holder.itemView.context, "收藏失败")
-                                        Looper.loop()
-                                    }.start()
+                                    ToastUtils.make().setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0).show("收藏失败")
                                 }
                             }
                         } catch (e: Exception) {
-                            Thread {
-                                Looper.prepare()
-                                DialogUtil.alertDialog(holder.itemView.context, "请求失败")
-                                Looper.loop()
-                            }.start()
+                            ToastUtils.make().setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0).show("服务器错误")
                         }
                     }
                 }

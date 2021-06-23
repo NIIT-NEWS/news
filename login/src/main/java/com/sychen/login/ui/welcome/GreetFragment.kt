@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.alibaba.android.arouter.launcher.ARouter
 import com.sychen.basic.*
+import com.sychen.basic.util.FlashlightUtils
 import com.sychen.basic.util.Show
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.login.R
