@@ -8,21 +8,21 @@
     android:layout_margin="10dp">
 
     <TextView
-        android:id="@+id/newsTitle"
+        android:id="@+id/newsTitles"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/newsIMG"
-        app:layout_constraintEnd_toStartOf="@+id/newsIMG"
+        app:layout_constraintBottom_toBottomOf="@+id/newsIMGS"
+        app:layout_constraintEnd_toStartOf="@+id/newsIMGS"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/newsIMG"
+        app:layout_constraintTop_toTopOf="@+id/newsIMGS"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/newsIMG"
+        android:id="@+id/newsIMGS"
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:layout_marginTop="4dp"
@@ -31,7 +31,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/newsDate"
+        android:id="@+id/newsDates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -39,19 +39,19 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/newsTitles"
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/author"
+        android:id="@+id/authors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/newsDate"
+        app:layout_constraintBottom_toTopOf="@+id/newsDates"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/newsTitles"
         app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
