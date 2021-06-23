@@ -37,17 +37,16 @@ public class SearchAdapter extends ListAdapter<SearchNews, SearchAdapter.SearchV
         holder.title.setText(news.getNewTitle());
         holder.author.setText(news.getAuthor());
         holder.date.setText(news.getDate());
-
         Glide.with(holder.itemView.getContext())
                 .load(news.getNewTitleImgUrl())
                 .into(holder.img);
         Intent intent = new Intent();
         intent.putExtra("Title",news.getNewTitle());
         intent.putExtra("Content",news.getContent());
+        intent.putExtra("Picture",news.getNewTitleImgUrl());
         intent.setClass(holder.itemView.getContext(), SearchMainActivity.class);
         holder.itemView.setOnClickListener(v -> {
             holder.itemView.getContext().startActivity(intent);
-
         });
     }
 
@@ -55,14 +54,12 @@ public class SearchAdapter extends ListAdapter<SearchNews, SearchAdapter.SearchV
         private TextView title;
         private TextView date;
         private TextView author;
-//        private Toolbar toolbar;
         private ImageView img;
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.newsTitle);
             author = itemView.findViewById(R.id.author);
             date = itemView.findViewById(R.id.newsDate);
-//            toolbar = itemView.findViewById(R.id.toolbar);
             img = itemView.findViewById(R.id.newsIMG);
         }
     }
