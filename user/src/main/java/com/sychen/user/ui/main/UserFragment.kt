@@ -31,7 +31,9 @@ import com.sychen.basic.MessageEvent
 import com.sychen.basic.MessageType
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.PermissionUtil
+import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesLoad
 import com.sychen.basic.util.Show
+import com.sychen.basic.util.dataStoreRead
 import com.sychen.basic.util.dataStoreSave
 import com.sychen.user.R
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -133,6 +135,7 @@ class UserFragment : Fragment() {
                 ActivityOptionsCompat.makeScaleUpAnimation(v, v.width, v.height, 0, 0)
             ARouter.getInstance()
                 .build(ARouterUtil.START_COLLECT_ACTIVITY)
+                .withString("TOKEN", sharedPreferencesLoad<String>("TOKEN")?.toString())
                 .withOptionsCompat(makeScaleUpAnimation)
                 .navigation()
         }

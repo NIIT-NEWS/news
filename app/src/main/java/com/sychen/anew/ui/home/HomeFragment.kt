@@ -31,6 +31,6 @@ class HomeFragment : Fragment() {
 
     }
     private fun initTopGuideLine(){
-        home_top_guideline.setGuidelineBegin(StatusBarHeight.get())
+//        home_top_guideline.setGuidelineBegin(StatusBarHeight.get())
     }
 }

@@ -6,11 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff">
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/home_top_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment3"
@@ -21,6 +16,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/home_top_guideline"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/home_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

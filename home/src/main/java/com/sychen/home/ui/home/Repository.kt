@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 object Repository {
 
-    private const val PAGE_SIZE = 10
+    private const val PAGE_SIZE = 20
 
     fun getPagingData(type:Int): Flow<PagingData<NiitNews.News>> {
         return Pager(

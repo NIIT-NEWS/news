@@ -13,6 +13,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.sychen.basic.*
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.DialogUtil
+import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesSave
 import com.sychen.basic.util.Show
 import com.sychen.basic.util.dataStoreSave
 import com.sychen.login.R
@@ -56,6 +57,7 @@ class LoginFragment : Fragment() {
                             dataStoreSave("USER_ID", userInfo.data.id.toString())
                             dataStoreSave("TOKEN", userInfo.data.token)
                         }
+                        sharedPreferencesSave("TOKEN",userInfo.data.token)
                         userViewModel.verifyExist(account).observe(requireActivity(), { verify ->
                             if (verify.isEmpty()) {
                                 //数据库插入数据

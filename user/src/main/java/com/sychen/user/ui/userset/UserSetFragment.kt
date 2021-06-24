@@ -49,7 +49,6 @@ import java.io.File
 class UserSetFragment : Fragment() {
     companion object {
         const val fromAlbum = 2
-        const val takePhoto = 1
     }
 
     private val viewModel by lazy {
@@ -58,8 +57,6 @@ class UserSetFragment : Fragment() {
     private lateinit var previewPhotoViewModel: PreviewPhotoViewModel
     private lateinit var userInfo: UserInfo
     private lateinit var userViewModel: UserViewModel
-    private lateinit var imageUri: Uri
-    private lateinit var outputImage: File
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

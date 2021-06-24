@@ -9,6 +9,6 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:windowTranslucentStatus">true</item><!--可以页面拉伸到状态栏顶部-->
-        <item name="android:windowTranslucentNavigation">false</item><!--可以页面拉伸到虚拟按键底部-->
+        <item name="android:windowTranslucentNavigation">true</item><!--可以页面拉伸到虚拟按键底部-->
     </style>
 </resources>

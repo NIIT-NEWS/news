@@ -31,8 +31,7 @@ public class SearchActivity extends BaseActivity {
     private RecyclerView recyclerView;
     @Autowired(name = "SEARCH_TEXT")
     String searchText;
-    
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.EventBus
 class ContentFragment : Fragment() {
     override fun onStart() {
         super.onStart()
-        val msg = MessageEvent(MessageType.TypeTwo).put("onStart")
+        val msg = MessageEvent(MessageType.TypeTwo).put("onStop")
         EventBus.getDefault().post(msg)
     }
     override fun onCreateView(
@@ -50,6 +50,7 @@ class ContentFragment : Fragment() {
         title.text = arguments?.get("NOTICE_TITLE").toString()
         setWebView()
     }
+
     @SuppressLint("SetJavaScriptEnabled")
     var setWebView = {
         webView.apply {
@@ -57,10 +58,6 @@ class ContentFragment : Fragment() {
             settings.javaScriptEnabled = true
             webViewClient = MyWebView()
             webChromeClient = MyWebViewSec()
-            //H5与kotlin 通信方式
-            //1.h5调用kotlin
-            //设置通信桥梁类
-            addJavascriptInterface(JavaScriptMe(requireContext(), this), "test")
             loadUrl(arguments?.getString("NOTICE_URL").toString())
         }
     }
@@ -68,8 +65,6 @@ class ContentFragment : Fragment() {
     private inner class MyWebView : WebViewClient() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            //kotlin调用js
-            //JS定义String变量的时候用单引号，而JAVA是使用双引号。
             val json = "kotlin调用js"
             try {
                 webView.loadUrl("javascript:showMessage('$json')")
@@ -87,39 +82,7 @@ class ContentFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        val msg = MessageEvent(MessageType.TypeTwo).put("onStop")
+        val msg = MessageEvent(MessageType.TypeTwo).put("onStart")
         EventBus.getDefault().post(msg)
-    }
-}
-class JavaScriptMe {
-
-    private var mContext: Context? = null
-
-    private var mWebView: WebView? = null
-
-    constructor(mContext: Context?, mWebView: WebView?) {
-        this.mContext = mContext
-        this.mWebView = mWebView
-    }
-
-    @JavascriptInterface
-    fun showToast(json: String) {
-        mContext?.let {
-        }
-    }
-
-    //callback （js嗲用kotlin）
-    @JavascriptInterface
-    fun getHotelData(method: String) {
-        var d = "获取酒店的数据"
-        println(d)
-//        callback 回传数据
-        mContext?.let {
-            it.runCatching {
-                mWebView?.let {
-                    it.loadUrl("javascript:$method('$d')")
-                }
-            }
-        }
     }
 }

@@ -23,8 +23,8 @@ public class CollectActivity extends BaseActivity {
     private CollectViewModel collectViewModel;
     private CollectAdapter collectAdapter;
     private RecyclerView recyclerView;
-    @Autowired(name = "COLLECT_TEXT")
-    String collectText;
+    @Autowired(name = "TOKEN")
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class CollectActivity extends BaseActivity {
         collectAdapter = new CollectAdapter(new CollectDiffCallBack());
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(collectAdapter);
-        collectViewModel.collectNews(collectText);
+        collectViewModel.collectNews(token);
         collectViewModel.collectNews.observe(this,
                 collectNews -> collectAdapter.submitList(collectNews)
         );
