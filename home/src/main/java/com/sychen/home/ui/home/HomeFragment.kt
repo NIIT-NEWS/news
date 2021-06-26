@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sychen.basic.ARouterUtil
 import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.util.StatusBarHeight
 import com.sychen.home.R
 import com.sychen.home.services.LocationService
 import com.sychen.home.ui.home.fragment.CollegeNewsFragment
@@ -46,6 +47,7 @@ class HomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        home_guideline.setGuidelineBegin(StatusBarHeight.get())
         home_viewpager.apply {
             adapter = object : FragmentStateAdapter(requireActivity()) {
                 override fun getItemCount() = 4

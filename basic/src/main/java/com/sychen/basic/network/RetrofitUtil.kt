@@ -2,9 +2,7 @@ package com.sychen.basic.network
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.sychen.basic.MyApplication
 import com.sychen.basic.MyApplication.Companion.getContext
-import kotlinx.coroutines.withContext
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -54,10 +52,10 @@ object RetrofitUtil {
     val gson: Gson = GsonBuilder()
         .serializeNulls()
         .create()
-    private var INSTANCE: Retrofit? = null
+    private var RETROFIT_INSTANCE: Retrofit? = null
 
     fun getRetrofit(): Retrofit {
-        val tempInstance = INSTANCE
+        val tempInstance = RETROFIT_INSTANCE
         if (tempInstance != null) {
             return tempInstance
         }
@@ -66,7 +64,7 @@ object RetrofitUtil {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(httpBuilder.build())
             .build()
-        INSTANCE = instance
+        RETROFIT_INSTANCE = instance
         return instance
     }
 

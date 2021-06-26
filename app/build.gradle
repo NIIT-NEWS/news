@@ -47,6 +47,7 @@ dependencies {
         implementation project(path: ':jwxx')
         implementation project(path: ':search')
         implementation project(path: ':collect')
+        implementation project(path: ':niitvideo')
     }
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

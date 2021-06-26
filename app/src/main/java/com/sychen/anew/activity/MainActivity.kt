@@ -6,7 +6,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.sychen.anew.R
-import com.sychen.anew.ui.dashboard.DashboardFragment
 import com.sychen.anew.ui.home.HomeFragment
 import com.sychen.anew.ui.user.UserFragment
 import com.sychen.basic.ARouterUtil
@@ -16,6 +15,8 @@ import com.sychen.basic.activity.BaseActivity
 import com.sychen.basic.util.PermissionUtil
 import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesLoad
 import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesSave
+import com.sychen.jwxx.ui.main.JwxxFragment
+import com.sychen.niitvideo.ui.videoplayer.VideoPlayerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -50,10 +51,11 @@ class MainActivity : BaseActivity() {
     private fun initViewPager2() {
         mainViewPager.apply {
             adapter = object : FragmentStateAdapter(this@MainActivity) {
-                override fun getItemCount() = 3
+                override fun getItemCount() = 4
                 override fun createFragment(position: Int) = when (position) {
-                    0 -> HomeFragment()
-                    1 -> DashboardFragment()
+                    0 -> VideoPlayerFragment()
+                    1 -> HomeFragment()
+                    2 -> JwxxFragment()
                     else -> UserFragment()
                 }
             }
@@ -73,9 +75,10 @@ class MainActivity : BaseActivity() {
     private fun initBottomNav() {
         nav_view.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> mainViewPager.currentItem = 0
-                R.id.navigation_dashboard -> mainViewPager.currentItem = 1
-                R.id.navigation_user -> mainViewPager.currentItem = 2
+                R.id.navigation_video -> mainViewPager.currentItem = 0
+                R.id.navigation_home -> mainViewPager.currentItem = 1
+                R.id.navigation_dashboard -> mainViewPager.currentItem = 2
+                R.id.navigation_user -> mainViewPager.currentItem = 3
             }
             false
         }

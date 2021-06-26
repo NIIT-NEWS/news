@@ -11,12 +11,12 @@
         android:id="@+id/tabLayout"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:textDirection="firstStrong"
-        app:tabIndicatorHeight="6dp"
-        app:tabIndicator="@color/blue"
         android:layout_gravity="center_horizontal|top"
-        app:tabIndicatorColor="@color/white"
+        android:textDirection="firstStrong"
+        app:tabIndicator="@color/blue"
+        app:tabIndicatorColor="@color/black"
         app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
         app:tabSelectedTextColor="@color/blue" />
 
     <androidx.viewpager2.widget.ViewPager2

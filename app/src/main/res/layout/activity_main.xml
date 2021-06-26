@@ -17,9 +17,9 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#2C3E50"
+        android:background="@color/white"
         app:itemBackground="@color/white"
         app:itemIconTint="@color/bottom_item_icon_tint_list"
         app:itemTextColor="@color/bottom_item_icon_tint_list"

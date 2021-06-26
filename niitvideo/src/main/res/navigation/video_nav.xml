@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_nav"
+    app:startDestination="@id/navigation_video">
+
+    <fragment
+        android:id="@+id/navigation_video"
+        android:name="com.sychen.niitvideo.ui.videoplayer.VideoPlayerFragment"
+        android:label="video_player_fragment"
+        tools:layout="@layout/video_player_fragment" />
+</navigation>
