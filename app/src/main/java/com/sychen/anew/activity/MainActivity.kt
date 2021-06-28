@@ -53,8 +53,8 @@ class MainActivity : BaseActivity() {
             adapter = object : FragmentStateAdapter(this@MainActivity) {
                 override fun getItemCount() = 4
                 override fun createFragment(position: Int) = when (position) {
-                    0 -> VideoPlayerFragment()
-                    1 -> HomeFragment()
+                    0 -> HomeFragment()
+                    1 -> VideoPlayerFragment()
                     2 -> JwxxFragment()
                     else -> UserFragment()
                 }
@@ -75,8 +75,8 @@ class MainActivity : BaseActivity() {
     private fun initBottomNav() {
         nav_view.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_video -> mainViewPager.currentItem = 0
-                R.id.navigation_home -> mainViewPager.currentItem = 1
+                R.id.navigation_video -> mainViewPager.currentItem = 1
+                R.id.navigation_home -> mainViewPager.currentItem = 0
                 R.id.navigation_dashboard -> mainViewPager.currentItem = 2
                 R.id.navigation_user -> mainViewPager.currentItem = 3
             }

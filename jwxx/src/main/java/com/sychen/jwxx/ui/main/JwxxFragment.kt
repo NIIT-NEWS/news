@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.sychen.basic.util.StatusBarHeight
 import com.sychen.jwxx.R
 import com.sychen.jwxx.ui.download.DownloadFragment
 import com.sychen.jwxx.ui.publicnotice.NoticeFragment
@@ -24,6 +25,7 @@ class JwxxFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        jwxx_main_guideline.setGuidelineBegin(StatusBarHeight.get())
         mainViewPager.apply {
             adapter = object : FragmentStateAdapter(requireActivity()) {
                 override fun getItemCount() = 2

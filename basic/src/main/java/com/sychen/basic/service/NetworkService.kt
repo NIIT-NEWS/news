@@ -27,7 +27,7 @@ class NetworkService : LifecycleService() {
         super.onBind(intent)
         lifecycleScope.launch {
             while (true) {
-                delay(1_0000)
+                delay(1_00000)
                 Log.e(TAG, "onStartCommand: NetworkService")
                 try {
                     val net = MainRetrofit.api.getNet()

@@ -5,6 +5,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.SurfaceHolder;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.io.IOException;
 
 public class MyPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
@@ -20,7 +23,7 @@ public class MyPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
         }
     }
 
-    public void play(Context context, String dataSource) {
+    public void play(String dataSource) {
         hasPrepared = false;
         initIfNecessary();
         try {
@@ -55,6 +58,7 @@ public class MyPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
             mPlayer.setDisplay(holder);
         }
     }
+
     public void release() {
         hasPrepared = false;
         mPlayer.stop();
@@ -77,5 +81,25 @@ public class MyPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
     public boolean onError(MediaPlayer mp, int what, int extra) {
         hasPrepared = false;
         return false;
+    }
+
+    public int getDuration() {
+        int duration = 0;
+        if (null != mPlayer && hasPrepared) {
+            duration = mPlayer.getDuration();
+            return duration;
+        } else {
+            return duration;
+        }
+    }
+
+    public int getCurrentPosition() {
+        int currentPosition = 0;
+        if (null != mPlayer && hasPrepared) {
+            currentPosition = mPlayer.getCurrentPosition();
+            return currentPosition;
+        } else {
+            return currentPosition;
+        }
     }
 }
