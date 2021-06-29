@@ -150,10 +150,10 @@
                 android:id="@+id/favorTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="喜欢"
+                android:layout_marginStart="15dp"
+                android:text="收藏"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:layout_marginStart="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/favorImageView"
                 app:layout_constraintTop_toTopOf="parent" />

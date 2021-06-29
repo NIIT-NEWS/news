@@ -1,20 +1,16 @@
 package com.sychen.jwxx.ui.content
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.navigation.Navigation
-import com.alibaba.android.arouter.launcher.ARouter
-import com.sychen.basic.ARouterUtil
 import com.sychen.basic.MessageEvent
 import com.sychen.basic.MessageType
 import com.sychen.basic.MyApplication

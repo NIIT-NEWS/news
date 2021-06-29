@@ -1,5 +1,6 @@
 package com.sychen.niitvideo.ui.videoplayer;
 
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,9 +21,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.sychen.basic.network.BaseResult;
 import com.sychen.basic.util.SharedPreferencesUtil;
 import com.sychen.niitvideo.R;
 import com.sychen.niitvideo.network.huc.HttpURLConnectionUtil;
+import com.sychen.niitvideo.network.model.LikeVideoModel;
 import com.sychen.niitvideo.network.model.Video;
 
 import java.io.IOException;
@@ -29,43 +35,22 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class VideoFragment extends Fragment {
-    private static final String VIDEO_URL = "VIDEO_URL";
-    private static final String VIDEO_Title = "VIDEO_Title";
-    private static final String VIDEO_Visit_Count = "VIDEO_Visit_Count";
-    private static final String VIDEO_ID = "VIDEO_ID";
     public static final String TAG = "TAG";
-    private String getVideoUrl;
-    private String getVideoTitle;
-    private String getVideoVisitCount;
-    private String getVideoId;
+    private static Video videoInfo;
     private SurfaceView surfaceView;
     private MediaPlayer myPlayer;
     private TextView videoTitle;
     private TextView videoVisitCount;
+    private TextView videodate;
+    private TextView videoauthor;
     private ProgressBar videoProgressBar;
     private ImageView likevideo;
     private HttpURLConnectionUtil httpURLConn;
 
     public static VideoFragment newInstance(Video video) {
         VideoFragment fragment = new VideoFragment();
-        Bundle args = new Bundle();
-        args.putString(VIDEO_URL, video.getUrl());
-        args.putString(VIDEO_Title, video.getTitle());
-        args.putString(VIDEO_Visit_Count, video.getVisitCount());
-        args.putString(VIDEO_ID, String.valueOf(video.getId()));
-        fragment.setArguments(args);
+        videoInfo = video;
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            getVideoUrl = getArguments().getString(VIDEO_URL);
-            getVideoTitle = getArguments().getString(VIDEO_Title);
-            getVideoVisitCount = getArguments().getString(VIDEO_Visit_Count);
-            getVideoId = getArguments().getString(VIDEO_ID);
-        }
     }
 
     @Override
@@ -77,6 +62,8 @@ public class VideoFragment extends Fragment {
         videoVisitCount = view.findViewById(R.id.videoVisitCount);
         videoProgressBar = view.findViewById(R.id.videoProgressBar);
         likevideo = view.findViewById(R.id.likevideo);
+        videodate = view.findViewById(R.id.videodate);
+        videoauthor = view.findViewById(R.id.videoauthor);
         return view;
     }
 
@@ -86,19 +73,38 @@ public class VideoFragment extends Fragment {
         initViews();
     }
 
+    @SuppressLint("SetTextI18n")
     private void initViews() {
         initPlayer();
+        videoTitle.setText(videoInfo.getTitle());
+        videoVisitCount.setText(videoInfo.getVisitCount());
+        videodate.setText(videoInfo.getDate());
+        videoauthor.setText(videoInfo.getAuthor());
         httpURLConn = new HttpURLConnectionUtil();
         likevideo.setOnClickListener(v ->
                 new Thread(() -> {
-                    httpURLConn.doPost("video/likeVideos", getVideoId);
+                    String result = httpURLConn.doPost("video/likeVideos", String.valueOf(videoInfo.getId()));
+                    LikeVideoModel likeVideoModel = new Gson().fromJson(result, LikeVideoModel.class);
+                    if (likeVideoModel.getCode() == 200) {
+                        Looper.prepare();
+                        likevideo.setImageResource(R.drawable.ic_loved);
+                        likevideo.setClickable(false);
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @SuppressLint("ResourceType")
+                            @Override
+                            public void run() {
+                                int visitCount = Integer.parseInt(videoInfo.getVisitCount());
+                                Log.e(TAG, "run: "+visitCount );
+//                                videoVisitCount.setText(visitCount+1);
+                            }
+                        });
+                        Looper.loop();
+                    }
                 }).start()
         );
     }
 
     private void initPlayer() {
-        videoTitle.setText(getVideoTitle);
-        videoVisitCount.setText(getVideoVisitCount);
         myPlayer = new MediaPlayer();
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -153,13 +159,18 @@ public class VideoFragment extends Fragment {
     private void play() {
         myPlayer.reset();
         try {
-            myPlayer.setDataSource(getVideoUrl);
-            myPlayer.prepare();
+            myPlayer.setDataSource(videoInfo.getUrl());
+            myPlayer.setOnPreparedListener(preparedListener);
+            myPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myPlayer.start();
     }
+
+    MediaPlayer.OnPreparedListener preparedListener = mp -> {
+        initProgressBar();
+        mp.start();
+    };
 
     private void pause() {
         if (myPlayer != null) {
@@ -171,7 +182,6 @@ public class VideoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         play();
-        initProgressBar();
     }
 
 

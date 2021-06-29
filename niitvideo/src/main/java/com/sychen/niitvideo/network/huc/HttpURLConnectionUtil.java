@@ -16,7 +16,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 public class HttpURLConnectionUtil {
-    public static final String BASE_URL = "http://35u76f5794.picp.vip:34242/";
+    public static final String BASE_URL = "http://39.101.177.93:8098/";
     public static final String TAG = "HttpURLConnectionUtil";
     private OutputStream outputStream;
     private BufferedWriter bufferedWriter;

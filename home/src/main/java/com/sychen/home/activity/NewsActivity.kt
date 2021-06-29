@@ -24,14 +24,11 @@ class NewsActivity : BaseActivity() {
     }
 
     private fun initViewPager() {
-        try {
-            news = Gson().fromJson(intent.getStringExtra("NEWS"), NiitNews.News::class.java)
-        } catch (e: Exception) {
-            Log.e(TAG, "NewDetailsFragment-onActivityCreated: ${e.message}")
-        }
+        news = Gson().fromJson(intent.getStringExtra("NEWS"), NiitNews.News::class.java)
         new_viewpager.apply {
             adapter = object : FragmentStateAdapter(this@NewsActivity) {
                 override fun getItemCount() = 2
+
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun createFragment(position: Int) = when (position) {
                     0 -> NewDetailsFragment().getInstance(news)

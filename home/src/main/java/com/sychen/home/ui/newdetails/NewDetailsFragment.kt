@@ -39,7 +39,6 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 class NewDetailsFragment : Fragment() {
 
-
     fun getInstance(new: NiitNews.News): Fragment {
         val newDetailsFragment = NewDetailsFragment()
         val bundle = Bundle()

@@ -1,16 +1,17 @@
 package com.sychen.jwxx.ui.publicnotice
 
-import android.os.Bundle
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.gson.Gson
 import com.sychen.jwxx.R
 import com.sychen.jwxx.network.model.PublicData
+import com.sychen.jwxx.ui.content.ContentActivity
 import kotlinx.android.synthetic.main.download_item.view.*
 
 class NoticeAdapter : ListAdapter<PublicData, NoticeListViewHolder>(DIFFCALLBACK) {
@@ -22,18 +23,16 @@ class NoticeAdapter : ListAdapter<PublicData, NoticeListViewHolder>(DIFFCALLBACK
     }
 
     override fun onBindViewHolder(holder: NoticeListViewHolder, position: Int) {
-        val noticeList = getItem(position)
+        val notice = getItem(position)
         with(holder.itemView) {
             download_img.load(R.drawable.ic_arrow)
             content.apply {
-                text = noticeList.title
+                text = notice.title
                 setOnClickListener {
-                    Bundle().apply {
-                        putString("NOTICE_TITLE", noticeList.title)
-                        putString("NOTICE_URL", noticeList.url)
-                        Navigation.findNavController(holder.itemView)
-                            .navigate(R.id.contentFragment, this)
-                    }
+                    val intent = Intent()
+                    intent.putExtra("NOTICE_INFO",Gson().toJson(notice))
+                    intent.setClass(holder.itemView.context,ContentActivity::class.java)
+                    holder.itemView.context.startActivity(intent)
                 }
             }
         }

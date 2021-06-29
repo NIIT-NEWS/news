@@ -2,13 +2,16 @@ package com.sychen.collect.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Guideline;
 
 import com.bumptech.glide.Glide;
+import com.sychen.basic.util.StatusBarHeight;
 import com.sychen.collect.R;
 
 public class CollectMainActivity extends AppCompatActivity {
@@ -28,6 +31,8 @@ public class CollectMainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);//获得activity.xml文件中toolbar的id
         newsContent = findViewById(R.id.newsContents);
         newsPicture = findViewById(R.id.newsPictures);
+        Guideline guideline = findViewById(R.id.collectmainguideline);
+        guideline.setGuidelineBegin(StatusBarHeight.INSTANCE.get());
         Intent intent = getIntent();//获得Intent值，在activity之间跳转时使用
         String title = intent.getStringExtra("Title");//获得值
         String content = intent.getStringExtra("Content");

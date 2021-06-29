@@ -9,6 +9,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.FileUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -22,7 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import coil.load
 import coil.transform.RoundedCornersTransformation
-import com.blankj.utilcode.util.FileUtils
 import com.google.gson.Gson
 import com.sychen.basic.MyApplication.Companion.TAG
 import com.sychen.basic.util.DialogUtil
@@ -37,10 +37,7 @@ import kotlinx.android.synthetic.main.alert_dialog.*
 import kotlinx.android.synthetic.main.select_avatar.*
 import kotlinx.android.synthetic.main.user_set_fragment.*
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 import kotlin.math.roundToInt
 
 
@@ -128,7 +125,8 @@ class UserSetFragment : Fragment() {
             }
             show()
             tv_take_photo.setOnClickListener {
-                Navigation.findNavController(requireView()).navigate(R.id.action_userSetFragment_to_cameraxFragment)
+                Navigation.findNavController(requireView())
+                    .navigate(R.id.action_userSetFragment_to_cameraxFragment)
                 this.dismiss()
             }
             tv_take_pic.setOnClickListener {
@@ -153,6 +151,7 @@ class UserSetFragment : Fragment() {
      * 2、将用户信息转换成json数据
      * 3、更新服务器的用户信息，主要是头像
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -164,12 +163,13 @@ class UserSetFragment : Fragment() {
                             //从相册选取图片时获得的uri,保存到本地
                             dataStoreSave("PHOTO_URI", uri.toString())
                         }
-                        val realPathFromUri =
-                            getRealPath.getRealPathFromUri(requireContext(), uri)
-                        val file = File(realPathFromUri)
+//                        val realPathFromUri =
+//                            getRealPath.getRealPathFromUri(requireContext(), uri)
+//                        val file = File(realPathFromUri)
+                        var file = uriToFileApiQ(uri, requireContext())
 //                        val file = FileUtils.getFileByPath(uri.toString())
                         Log.e(TAG, "this is fromAlbum: $file")
-                        previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(), {
+                        previewPhotoViewModel.uploadAvatar(file!!).observe(requireActivity(), {
                             viewModel.updateAvatar(it.url)
                         })
                         user_set_avatar.apply {
@@ -186,6 +186,34 @@ class UserSetFragment : Fragment() {
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun uriToFileApiQ(uri: Uri?, context: Context): File? {
+        var file: File? = null
+        if (uri == null) return file
+        //android10以上转换
+        if (uri.scheme == ContentResolver.SCHEME_FILE) {
+            file = File(uri.path)
+        } else if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            //把文件复制到沙盒目录
+            val contentResolver = context.contentResolver
+            val displayName: String =
+                (System.currentTimeMillis() + ((Math.random() + 1) * 1000).roundToInt()).toString() + "." + MimeTypeMap.getSingleton()
+                    .getExtensionFromMimeType(contentResolver.getType(uri))
+            try {
+                val inputStream: InputStream? = contentResolver.openInputStream(uri)
+                val cache = File(context.cacheDir.absolutePath, displayName)
+                val fos = FileOutputStream(cache)
+                FileUtils.copy(inputStream!!, fos)
+                file = cache
+                fos.close()
+                inputStream!!.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return file
     }
 
 }
