@@ -44,6 +44,7 @@ public class VideoFragment extends Fragment {
     private TextView videodate;
     private TextView videoauthor;
     private ProgressBar videoProgressBar;
+    private ProgressBar progressBar;
     private ImageView likevideo;
     private HttpURLConnectionUtil httpURLConn;
 
@@ -64,6 +65,7 @@ public class VideoFragment extends Fragment {
         likevideo = view.findViewById(R.id.likevideo);
         videodate = view.findViewById(R.id.videodate);
         videoauthor = view.findViewById(R.id.videoauthor);
+        progressBar = view.findViewById(R.id.progressBar);
         return view;
     }
 
@@ -162,12 +164,14 @@ public class VideoFragment extends Fragment {
             myPlayer.setDataSource(videoInfo.getUrl());
             myPlayer.setOnPreparedListener(preparedListener);
             myPlayer.prepareAsync();
+            progressBar.setVisibility(View.VISIBLE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     MediaPlayer.OnPreparedListener preparedListener = mp -> {
+        progressBar.setVisibility(View.INVISIBLE);
         initProgressBar();
         mp.start();
     };
@@ -175,6 +179,7 @@ public class VideoFragment extends Fragment {
     private void pause() {
         if (myPlayer != null) {
             myPlayer.pause();
+            progressBar.setVisibility(View.VISIBLE);
         }
     }
 
