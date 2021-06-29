@@ -15,27 +15,36 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.sychen.basic.util.SharedPreferencesUtil;
 import com.sychen.niitvideo.R;
+import com.sychen.niitvideo.network.huc.HttpURLConnectionUtil;
 import com.sychen.niitvideo.network.model.Video;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class VideoFragment extends Fragment {
     private static final String VIDEO_URL = "VIDEO_URL";
     private static final String VIDEO_Title = "VIDEO_Title";
     private static final String VIDEO_Visit_Count = "VIDEO_Visit_Count";
+    private static final String VIDEO_ID = "VIDEO_ID";
     public static final String TAG = "TAG";
     private String getVideoUrl;
     private String getVideoTitle;
     private String getVideoVisitCount;
+    private String getVideoId;
     private SurfaceView surfaceView;
     private MediaPlayer myPlayer;
     private TextView videoTitle;
     private TextView videoVisitCount;
     private ProgressBar videoProgressBar;
+    private ImageView likevideo;
+    private HttpURLConnectionUtil httpURLConn;
 
     public VideoFragment() {
     }
@@ -46,6 +55,7 @@ public class VideoFragment extends Fragment {
         args.putString(VIDEO_URL, video.getUrl());
         args.putString(VIDEO_Title, video.getTitle());
         args.putString(VIDEO_Visit_Count, video.getVisitCount());
+        args.putString(VIDEO_ID, String.valueOf(video.getId()));
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +67,7 @@ public class VideoFragment extends Fragment {
             getVideoUrl = getArguments().getString(VIDEO_URL);
             getVideoTitle = getArguments().getString(VIDEO_Title);
             getVideoVisitCount = getArguments().getString(VIDEO_Visit_Count);
+            getVideoId = getArguments().getString(VIDEO_ID);
         }
     }
 
@@ -68,13 +79,24 @@ public class VideoFragment extends Fragment {
         videoTitle = view.findViewById(R.id.videoTitle);
         videoVisitCount = view.findViewById(R.id.videoVisitCount);
         videoProgressBar = view.findViewById(R.id.videoProgressBar);
+        likevideo = view.findViewById(R.id.likevideo);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViews();
+    }
+
+    private void initViews() {
         initPlayer();
+        httpURLConn = new HttpURLConnectionUtil();
+        likevideo.setOnClickListener(v ->
+                new Thread(() -> {
+                    httpURLConn.doPost("video/likeVideos",getVideoId);
+                }).start()
+        );
     }
 
     private void initPlayer() {
@@ -88,7 +110,7 @@ public class VideoFragment extends Fragment {
 
             @Override
             public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-                if (holder!=null){
+                if (holder != null) {
                     myPlayer.setDisplay(holder);
                 }
             }

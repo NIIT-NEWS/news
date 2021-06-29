@@ -25,7 +25,7 @@ public class CollectMainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        toolbar = findViewById(R.id.toolbar1);//获得activity.xml文件中toolbar的id
+        toolbar = findViewById(R.id.toolbar);//获得activity.xml文件中toolbar的id
         newsContent = findViewById(R.id.newsContents);
         newsPicture = findViewById(R.id.newsPictures);
         Intent intent = getIntent();//获得Intent值，在activity之间跳转时使用

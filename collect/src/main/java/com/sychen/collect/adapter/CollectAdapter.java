@@ -1,5 +1,6 @@
 package com.sychen.collect.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.sychen.collect.R;
+import com.sychen.collect.activity.CollectMainActivity;
 import com.sychen.collect.network.model.CollectNews;
 
 public class CollectAdapter extends ListAdapter<CollectNews, CollectAdapter.CollectViewHolder> {
+
     public CollectAdapter(@NonNull DiffUtil.ItemCallback<CollectNews> diffCallback) {
         super(diffCallback);
     }
+
     @NonNull
     @Override
     public CollectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,14 +38,14 @@ public class CollectAdapter extends ListAdapter<CollectNews, CollectAdapter.Coll
         Glide.with(holder.itemView.getContext())
                 .load(news.getNews().getNewTitleImgUrl())
                 .into(holder.img);
-//        Intent intent = new Intent();
-//        intent.putExtra("Title",news.getNews().getNewTitle());
-//        intent.putExtra("Content",news.getNews().getContent());
-//        intent.putExtra("Picture",news.getNews().getNewTitleImgUrl());
-//        intent.setClass(holder.itemView.getContext(), CollectMainActivity.class);
-//        holder.itemView.setOnClickListener(v -> {
-//            holder.itemView.getContext().startActivity(intent);
-//        });
+        Intent intent = new Intent();
+        intent.putExtra("Title",news.getNews().getNewTitle());
+        intent.putExtra("Content",news.getNews().getContent());
+        intent.putExtra("Picture",news.getNews().getNewTitleImgUrl());
+        intent.setClass(holder.itemView.getContext(), CollectMainActivity.class);
+        holder.itemView.setOnClickListener(v -> {
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     class CollectViewHolder extends RecyclerView.ViewHolder{

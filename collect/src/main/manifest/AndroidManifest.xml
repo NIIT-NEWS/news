@@ -4,7 +4,8 @@
     <!-- 用于访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application>
-        <activity android:name=".activity.CollectActivity"></activity>
+        <activity android:name=".activity.CollectActivity" />
+        <activity android:name=".activity.CollectMainActivity" />
     </application>
 
 </manifest>

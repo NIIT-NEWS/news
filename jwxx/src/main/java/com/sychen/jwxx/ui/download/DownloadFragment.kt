@@ -33,6 +33,7 @@ class DownloadFragment : Fragment() {
         recyclerview.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
             adapter = downloadAdapter
+            downloadAdapter.notifyDataSetChanged()
         }
         viewModel.downloadList.observe(requireActivity(),{
             downloadAdapter.submitList(it)

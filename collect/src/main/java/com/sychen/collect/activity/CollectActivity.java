@@ -1,6 +1,7 @@
 package com.sychen.collect.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.constraintlayout.widget.Guideline;
 import androidx.lifecycle.ViewModelProvider;
@@ -39,11 +40,10 @@ public class CollectActivity extends BaseActivity {
         guidelineCollect.setGuidelineBegin(StatusBarHeight.INSTANCE.get());
         recyclerView = findViewById(R.id.collect_recyclerView);
         collectAdapter = new CollectAdapter(new CollectDiffCallBack());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(collectAdapter);
         collectViewModel.collectNews(token);
-        collectViewModel.collectNews.observe(this,
-                collectNews -> collectAdapter.submitList(collectNews)
+        collectViewModel.collectNews.observe(this, collectNews -> collectAdapter.submitList(collectNews)
         );
     }
 }
