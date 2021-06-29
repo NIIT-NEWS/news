@@ -16,6 +16,7 @@ import com.sychen.basic.util.PermissionUtil
 import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesLoad
 import com.sychen.basic.util.SharedPreferencesUtil.sharedPreferencesSave
 import com.sychen.jwxx.ui.main.JwxxFragment
+import com.sychen.niitvideo.ui.videoplayer.VideoFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -53,6 +54,7 @@ class MainActivity : BaseActivity() {
                 override fun getItemCount() = 4
                 override fun createFragment(position: Int) = when (position) {
                     0 -> HomeFragment()
+                    1 -> VideoFragment()
                     2 -> JwxxFragment()
                     else -> UserFragment()
                 }
