@@ -3,39 +3,33 @@ package com.sychen.user.ui.userset
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.FileProvider
-import androidx.core.content.contentValuesOf
+import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.blankj.utilcode.util.FileUtils
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.sychen.basic.MyApplication.Companion.TAG
-import com.sychen.basic.MyApplication.Companion._context
 import com.sychen.basic.util.DialogUtil
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.basic.util.dataStoreSave
 import com.sychen.basic.util.getRealPath
 import com.sychen.user.R
-import com.sychen.user.network.model.User
 import com.sychen.user.network.model.UserInfo
 import com.sychen.user.ui.main.UserViewModel
 import com.sychen.user.ui.previewcamera.PreviewPhotoViewModel
@@ -44,6 +38,10 @@ import kotlinx.android.synthetic.main.select_avatar.*
 import kotlinx.android.synthetic.main.user_set_fragment.*
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import kotlin.math.roundToInt
 
 
 class UserSetFragment : Fragment() {
@@ -161,7 +159,7 @@ class UserSetFragment : Fragment() {
             fromAlbum -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     data.data?.let { uri ->
-                        Log.e(TAG, "onActivityResult: uri$uri", )
+                        Log.e(TAG, "onActivityResult: uri$uri")
                         lifecycleScope.launch {
                             //从相册选取图片时获得的uri,保存到本地
                             dataStoreSave("PHOTO_URI", uri.toString())
@@ -169,7 +167,8 @@ class UserSetFragment : Fragment() {
                         val realPathFromUri =
                             getRealPath.getRealPathFromUri(requireContext(), uri)
                         val file = File(realPathFromUri)
-                        Log.e(TAG, "this is fromAlbum: $file",)
+//                        val file = FileUtils.getFileByPath(uri.toString())
+                        Log.e(TAG, "this is fromAlbum: $file")
                         previewPhotoViewModel.uploadAvatar(file).observe(requireActivity(), {
                             viewModel.updateAvatar(it.url)
                         })
@@ -188,6 +187,5 @@ class UserSetFragment : Fragment() {
             }
         }
     }
-
 
 }
