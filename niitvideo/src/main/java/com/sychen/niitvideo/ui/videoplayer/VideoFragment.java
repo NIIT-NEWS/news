@@ -173,7 +173,7 @@ public class VideoFragment extends Fragment {
     MediaPlayer.OnPreparedListener preparedListener = mp -> {
         progressBar.setVisibility(View.INVISIBLE);
         initProgressBar();
-        mp.start();
+        mp.start();//播放
     };
 
     private void pause() {
@@ -183,6 +183,7 @@ public class VideoFragment extends Fragment {
         }
     }
 
+    //视图渲染完成后的
     @Override
     public void onResume() {
         super.onResume();
@@ -201,7 +202,7 @@ public class VideoFragment extends Fragment {
         super.onStop();
         if (myPlayer != null && myPlayer.isPlaying()) {
             myPlayer.stop();
-            myPlayer.release();
+            myPlayer.release();//释放资源
             myPlayer = null;
         }
     }

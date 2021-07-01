@@ -89,20 +89,10 @@ class SetNameFragment : Fragment() {
         }
         inputStatus.observe(requireActivity(), {
             when (inputStatus.value) {
-                /** 键盘没有输入的时候
-                 *  确认按钮不可用
-                 *  输入框内容写入用户名数据
-                 *  点击清除按钮可以清除edittext的text
-                 */
                 InputStatus.InputStart -> {
                     confirm_button.isEnabled = false
                     edit_clear.visibility = View.INVISIBLE
                 }
-                /**
-                 * 当用户输入完成
-                 * 获取edittext的值并验证
-                 * 传入view model更新用户信息
-                 */
                 InputStatus.InputEnd -> {
                     //确认按钮
                     confirm_button.apply {

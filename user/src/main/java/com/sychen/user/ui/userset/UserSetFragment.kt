@@ -163,11 +163,7 @@ class UserSetFragment : Fragment() {
                             //从相册选取图片时获得的uri,保存到本地
                             dataStoreSave("PHOTO_URI", uri.toString())
                         }
-//                        val realPathFromUri =
-//                            getRealPath.getRealPathFromUri(requireContext(), uri)
-//                        val file = File(realPathFromUri)
                         var file = uriToFileApiQ(uri, requireContext())
-//                        val file = FileUtils.getFileByPath(uri.toString())
                         Log.e(TAG, "this is fromAlbum: $file")
                         previewPhotoViewModel.uploadAvatar(file!!).observe(requireActivity(), {
                             viewModel.updateAvatar(it.url)

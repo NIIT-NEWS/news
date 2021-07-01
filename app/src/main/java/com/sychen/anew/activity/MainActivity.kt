@@ -76,8 +76,8 @@ class MainActivity : BaseActivity() {
     private fun initBottomNav() {
         nav_view.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_video -> mainViewPager.currentItem = 1
                 R.id.navigation_home -> mainViewPager.currentItem = 0
+                R.id.navigation_video -> mainViewPager.currentItem = 1
                 R.id.navigation_dashboard -> mainViewPager.currentItem = 2
                 R.id.navigation_user -> mainViewPager.currentItem = 3
             }

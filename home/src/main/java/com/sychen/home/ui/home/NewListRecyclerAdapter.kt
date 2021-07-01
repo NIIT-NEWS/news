@@ -2,6 +2,7 @@ package com.sychen.home.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import coil.transform.RoundedCornersTransformation
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.google.gson.Gson
+import com.sychen.basic.MyApplication.Companion.TAG
+import com.sychen.basic.util.DialogUtil
 import com.sychen.basic.util.dataStoreRead
 import com.sychen.home.R
 import com.sychen.home.activity.NewsActivity
@@ -94,8 +97,10 @@ class NewsListRecyclerAdapter(val newsList: List<NiitNews.News>, val bannerList:
                                 nid = newsList.id.toString(),
                                 token = dataStoreRead("TOKEN")
                             )
+                            Log.e(TAG, "onBindViewHolder: $collectNews")
                             when (collectNews.code) {
                                 200 -> {
+//                                    DialogUtil.alertDialog(holder.itemView.context,"收藏成功")
                                     ToastUtils.make().setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 0).show("收藏成功")
                                     VibrateUtils.vibrate(500)
                                 }

@@ -157,13 +157,9 @@ class NewDetailsFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     var setWebView = {
         webview.apply {
-            //开启kotlin与H5通信
             settings.javaScriptEnabled = true
             webViewClient = MyWebView()
             webChromeClient = MyWebViewSec()
-            //H5与kotlin 通信方式
-            //1.h5调用kotlin
-            //设置通信桥梁类
             addJavascriptInterface(JavaScriptMe(requireContext(), this), "test")
             loadUrl(news.webUrl)
         }
@@ -172,8 +168,6 @@ class NewDetailsFragment : Fragment() {
     private inner class MyWebView : WebViewClient() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            //kotlin调用js
-            //JS定义String变量的时候用单引号，而JAVA是使用双引号。
             val json = "kotlin调用js"
             try {
                 webview.loadUrl("javascript:showMessage('$json')")

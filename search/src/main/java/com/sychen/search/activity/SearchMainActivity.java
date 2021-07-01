@@ -1,12 +1,16 @@
 package com.sychen.search.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Guideline;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 import com.bumptech.glide.Glide;
+import com.sychen.basic.util.StatusBarHeight;
 import com.sychen.search.R;
 
 /**
@@ -41,6 +45,8 @@ public class SearchMainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);//获得activity.xml文件中toolbar的id
         newsContent = findViewById(R.id.newsContent);
         newsPicture = findViewById(R.id.newsPicture);
+        Guideline guideline = findViewById(R.id.searchguideline);
+        guideline.setGuidelineBegin(StatusBarHeight.INSTANCE.get());
         Intent intent = getIntent();//获得Intent值，在activity之间跳转时使用
         String title = intent.getStringExtra("Title");//获得值
         String content = intent.getStringExtra("Content");
